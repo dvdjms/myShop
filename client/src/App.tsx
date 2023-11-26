@@ -13,6 +13,7 @@ function App() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   onAuthStateChanged(auth, (user) => {
+
     if(user){
       setIsSignedIn(true);
     }

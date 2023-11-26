@@ -19,7 +19,7 @@ from django.urls import include, path
 from django.contrib import admin
 # from rest_framework import routers
 from rest_api import views
-from rest_api.views import ProductView, CustomUserViewSet
+from rest_api.views import ProductView, CustomUserViewSet, CurrentUserView
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -31,5 +31,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/products/', ProductView.as_view(), name = 'products'),
     path('products/', views.getProducts),
+    path('current-user/', CurrentUserView.as_view(), name='current_user')
 ]
 

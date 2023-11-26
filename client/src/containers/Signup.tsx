@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
 import { auth, googleProvider } from '../config/Firebase';
+import { signInUserFetch } from '../services/api';
 
 
 const Signup = () => {
@@ -11,60 +12,40 @@ const Signup = () => {
     const [password, setPassword] = useState('');
  
     const onSubmit = async (e: { preventDefault: () => void; }) => {
-      e.preventDefault()
+      e.preventDefault();
      
       try {
-
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        const user_token = await user.getIdToken();
-        const userUID = userCredential.user?.uid;
-        // const userEmail = userCredential.user?.email;
-        console.log(userUID);
-     
-        if(user_token) {
-
-        const response = await fetch('http://127.0.0.1:8000/api/users/', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user_token}`,
-            },
-            body: JSON.stringify({
-                'firebase_uid': userUID,
-                'email': email,
-                'display_name': displayName,
-            }),
-        });
-        const data = await response.json();
-        console.log('Message from React:', data);
-        navigate("/")
-        // if(userUID){
-        //     navigate("/login")
-        // }
-
-    }
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            await updateProfile(userCredential.user, { displayName });
         
-    }
+            const user_token = await user.getIdToken();
+            const display_name = userCredential.user?.displayName || '';
+            const userUID = userCredential.user?.uid || '';
+            const userEmail = userCredential.user?.email || '';
+    
+            if(user_token) {
+                signInUserFetch(user_token, userUID, display_name, userEmail);
+                navigate("/");
+            }
+        }
         catch (error) {
-            const errorCode = error;
-            const errorMessage = error;
-            console.log(errorCode, errorMessage);
-            // ..
+            console.error("error", error);
         };
 
-    }
+    };
+
+
 
     const signInWithGoogle = async (): Promise<void> => {
-        //////////////////////////////////////////////////////////////////////////////
-        //send data to server
+
         try {
           await signInWithPopup(auth, googleProvider);
           navigate("/");
         } catch (err) {
           console.error(err);
         }
-      };
+    };
 
 
 
@@ -146,4 +127,4 @@ const Signup = () => {
   )
 }
  
-export default Signup
+export default Signup;
