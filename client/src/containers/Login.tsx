@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, onAuthStateChanged, googleProvider } from '../config/Firebase';
+import { auth, googleProvider } from '../config/Firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 
@@ -12,43 +12,17 @@ const Login = () => {
     const onLogin = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            navigate("/")
-            console.log(user);
-            
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage)
-        });
+        navigate("/")
     }
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          if (user) {
-            console.log('User ID:', user.uid);
-            console.log('User Email:', user.email);
-          } else {
-            console.log('No user signed in.');
-          }
-        });
-        // Clean up the subscription when the component unmounts
-        return () => unsubscribe();
-      }, []);
-
-
-
-      const signInWithGoogle = async (): Promise<void> => {
+    const signInWithGoogle = async (): Promise<void> => {
         try {
-          await signInWithPopup(auth, googleProvider);
-          navigate("/");
+            await signInWithPopup(auth, googleProvider);
+            navigate("/");
         } catch (err) {
-          console.error(err);
+            console.error(err);
         }
-      };
+    };
 
 
     return(

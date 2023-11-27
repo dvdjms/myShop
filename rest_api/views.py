@@ -63,20 +63,11 @@ class CurrentUserView(APIView):
 
 
 
-
-
-
-
-
-
-
-
 class ProductView(generics.ListAPIView):
     serializer_class = ProductSerializer
+
     def get_queryset(self):
-        # searchField = self.kwargs.get("procduct", "")
-        product_data = Product.objects.all()
-        return product_data
+        return Product.objects.all().order_by('id')
     
 
 
@@ -85,23 +76,7 @@ def signUp(request):
 
 
 
-def getProducts(request):
-    products = Product.objects.all()
 
-    # Return a JSON response with the products
-    # return JsonResponse({'products': products})
-    # Get token
-    # authorization_header = request.META.get('HTTP_AUTHORIZATION')
-    # token = authorization_header.replace("Bearer ", "")
-    # Verify token
-    try:
-        # decoded_token = auth.verify_id_token(token)
-        # firebase_user_id = decoded_token['user_id']
-        products = Product.objects.all()
-        response_object = {"data": serialize("json", products)}
-    except ValueError as e:
-        return JsonResponse({"data": f"Invalid user token: {str(e)}"})
-    return JsonResponse(response_object)
 
 
 def getUser(request):

@@ -32,7 +32,7 @@ export const getUserDetails = async (): Promise<string | undefined> => {
 
       const user = auth.currentUser;
       if(!user){
-            return undefined;
+            return "not signed in";
       }
       const url = 'http://127.0.0.1:8000/current-user/';
       const token = await user.getIdToken();

@@ -1,62 +1,59 @@
 import React, { useState } from 'react';
-import { auth } from '../config/Firebase';
+import { auth  } from '../config/Firebase';
 import styled from 'styled-components';
-import { getUserDetails } from '../services/api'
 
 
-const Home = () => {
+const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean}) => {
 
-
-    const [userID, setUserID] = useState<string>("")
-
-    const getUser = async () => {
-        try {
-            const user = await getUserDetails();
-            console.log('that', user)
-            if(typeof user === 'string'){
-                setUserID(user);
-            } else {
-                console.error('Invalid user details', user);
-            }
-        } catch (error) {
-            console.error('Error fetching user details:', error);
-          }
-    }
-
+    const [products, setProducts] = useState<string[]>([]);
 
     const getData = () => {
         auth.onAuthStateChanged(async (user) => {
             if(user){
                 let token = await user.getIdToken();
-                fetch('http://127.0.0.1:8000/products/', {
+                fetch('http://127.0.0.1:8000/api/products/', {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     } 
                 })
                 .then((response) => response.json())
                 .then((JsonResponse) => {
-                    console.log(JsonResponse)
-                })
-            }
-        })
-
-    }
+                    let data = JsonResponse.results;
+                    setProducts(data);
+                });
+            };
+        });
+    };
 
    
     return(
         <HomePage>
- 
-            <h1>
-                Welcome Home, {userID}
-            </h1>
- 
-            <div>
-                <button onClick={getData}>Get data</button>
-            </div>
-            <div>
-                <button onClick={getUser}>Get user</button>
-            </div>
+        <div>
+            
+            {props.loading ?  (
+                <p>Loading...</p>
+            ) : (
+                props.isSignedIn ? (
+                    <div>
+                        <p>Hello, {props.userName}!</p>
+                    </div>
+                ) : (
+                    <p>User not logged in.</p>
+                )
+            )}
 
+        </div>
+ 
+        <div>
+            <button onClick={getData}>Get data</button>
+            <ul>
+                {products.map((product: any, index) => {
+                
+                    return <li key={index}>{product.product} {product.price}</li>;
+                })}
+            </ul>
+
+        </div>
 
         </HomePage>
     )

@@ -34,6 +34,6 @@ class CustomUser(AbstractUser):
 class Product(models.Model):
     product = models.CharField(max_length=32, blank=False)
     category = models.CharField(max_length=32, blank=False)
-    price = models.FloatField(blank=False)
+    price = models.DecimalField(blank=False, max_digits=6, decimal_places=2)
 
 

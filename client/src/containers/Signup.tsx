@@ -7,18 +7,16 @@ import { signInUserFetch } from '../services/api';
 
 const Signup = () => {
     const navigate = useNavigate();
-    const [displayName, setDisplayName] = useState('')
-    const [email, setEmail] = useState('')
+    const [displayName, setDisplayName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
  
     const onSubmit = async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
-     
       try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             await updateProfile(userCredential.user, { displayName });
-        
             const user_token = await user.getIdToken();
             const display_name = userCredential.user?.displayName || '';
             const userUID = userCredential.user?.uid || '';
@@ -32,23 +30,29 @@ const Signup = () => {
         catch (error) {
             console.error("error", error);
         };
-
     };
-
 
 
     const signInWithGoogle = async (): Promise<void> => {
 
         try {
-          await signInWithPopup(auth, googleProvider);
-          navigate("/");
-        } catch (err) {
-          console.error(err);
+            const result = await signInWithPopup(auth, googleProvider);
+            const userCredential = result;
+            const user = userCredential.user;
+            const user_token = await user.getIdToken();
+            const user_UID = user.uid;
+            const display_name = user.displayName || '';
+            const user_email = user.email || '';
+            if(user_token){
+                signInUserFetch(user_token, user_UID, display_name, user_email);
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("error", error);
         }
     };
 
-
-
+ 
 
  
   return (

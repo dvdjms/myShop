@@ -30,7 +30,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/products/', ProductView.as_view(), name = 'products'),
-    path('products/', views.getProducts),
+    path('products/', ProductView.as_view(), name='products'),
     path('current-user/', CurrentUserView.as_view(), name='current_user')
 ]
 

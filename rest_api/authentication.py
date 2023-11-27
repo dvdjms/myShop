@@ -37,8 +37,20 @@ class FirebaseAuthentication(BaseAuthentication):
             except Exception:
                   raise exceptions.FirebaseError()
             
-            """Retrieve the user without creating it"""
             # """Get or create the user"""
+            # this is redundant. User is added to database via fetch
+            # try:
+            #       print('firebase provider', decoded_token.get("sign_in_provider"))
+            #       if decoded_token.get("sign_in_provider"):
+            #             user = CustomUser.objects.get_or_create(username=display_name, email=email, firebase_uid=uid)
+            #             print(decoded_token.get("sign_in_provider"))
+            #             return user, None
+            # except CustomUser.DoesNotExist:
+            #       return None
+
+
+            """Retrieve the user without creating it"""
+            
             try:
                   user = CustomUser(username=display_name,email=email,firebase_uid=uid)
             except CustomUser.DoesNotExist:
