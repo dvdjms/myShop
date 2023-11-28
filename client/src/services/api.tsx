@@ -30,7 +30,7 @@ export const signInUserFetch = async (user_token: string, userUID: string, displ
 // get current user name
 export const getUserDetails = async (): Promise<string | undefined> => {
 
-      const user = auth.currentUser;
+      const user = auth.currentUser || '';
       if(!user){
             return "not signed in";
       }

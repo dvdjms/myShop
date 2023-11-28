@@ -29,7 +29,7 @@ const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean})
     return(
         <HomePage>
         <div>
-            
+
             {props.loading ?  (
                 <p>Loading...</p>
             ) : (

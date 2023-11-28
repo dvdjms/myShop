@@ -8,6 +8,7 @@ import { onAuthStateChanged, auth } from './config/Firebase';
 import Navigation from './components/Navigation';
 import { getUserDetails } from './services/api'
 
+
 function App() {
 
   const [isSignedIn, setIsSignedIn] = useState(false);

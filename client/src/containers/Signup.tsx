@@ -1,8 +1,25 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, 
+    signInWithPopup, updateProfile, GoogleAuthProvider,
+    FacebookAuthProvider, TwitterAuthProvider, GithubAuthProvider } from 'firebase/auth';
 import { auth, googleProvider } from '../config/Firebase';
 import { signInUserFetch } from '../services/api';
+import StyledFirebaseAuth from '../config/StyledFirebaseAuth';
+
+const uiConfig = {
+    signInSuccessUrl: '/',
+    signInFlow: "popup",
+    signInOptions: [
+      GoogleAuthProvider.PROVIDER_ID,
+      FacebookAuthProvider.PROVIDER_ID,
+      TwitterAuthProvider.PROVIDER_ID,
+      GithubAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: () => false,
+    },
+  };
 
 
 const Signup = () => {
@@ -53,7 +70,7 @@ const Signup = () => {
     };
 
  
-
+const firebaseAuth = auth;
  
   return (
     <main >        
@@ -127,6 +144,7 @@ const Signup = () => {
                 </div>
             </div>
         </section>
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseAuth}  />
     </main>
   )
 }
