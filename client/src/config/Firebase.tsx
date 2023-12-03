@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider, GithubAuthProvider } from "firebase/auth"; // Added by me
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore'
+import { EmailAuthProvider, GoogleAuthProvider, TwitterAuthProvider, GithubAuthProvider } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -18,14 +19,50 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
+
+let firebaseApp;
+
+try {
+  firebaseApp = initializeApp(firebaseConfig);
+} catch (error) {
+  console.error("Error initializing Firebase app:", error);
+}
+// const firebaseApp = initializeApp(firebaseConfig);
+
+const uiConfiguration = {
+  signInFlow: 'popup',
+  signInSuccessUrl: '/',
+  signInOptions: [
+    {
+      provider: EmailAuthProvider.PROVIDER_ID,
+      fullLabel: "Continue with email",
+    },
+    {
+      provider: GoogleAuthProvider.PROVIDER_ID,
+      fullLabel: "Continue with Google",
+    },
+    {
+      provider: TwitterAuthProvider.PROVIDER_ID,
+      fullLabel: "Continue with Twitter",
+
+    },
+    {
+      provider: GithubAuthProvider.PROVIDER_ID,
+      fullLabel: "Continue with GitHub",
+
+    }
+
+  ],
+  // Other config options...
+  callbacks: {
+    signInSuccessWithAuthResult: () => false,
+  },
+};
+
 
 // Firebase services
 const auth = getAuth(firebaseApp);
-export const googleProvider = new GoogleAuthProvider();
-export const facebookProvider = new FacebookAuthProvider();
-export const twitterProvider = new TwitterAuthProvider();
-export const githubProvider = new GithubAuthProvider();
+export const uiConfig = uiConfiguration;
 
 export { auth, onAuthStateChanged, firebaseApp };
 export const db = getFirestore();

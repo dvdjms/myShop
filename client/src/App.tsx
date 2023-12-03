@@ -4,9 +4,10 @@ import Home from './containers/Home';
 import Login from './containers/Login';
 import Signup from './containers/Signup';
 import Profile from './containers/Profile';
+import Footer from './components/Footer';
 import { onAuthStateChanged, auth } from './config/Firebase';
-import Navigation from './components/Navigation';
-import { getUserDetails } from './services/api'
+import NavBar from './components/NavBar';
+import { getUserDetails } from './services/api';
 
 
 function App() {
@@ -52,8 +53,9 @@ useEffect(() => {
 
   return (
     <div className="App">
+
       <Router>
-      <Navigation isSignedIn={isSignedIn} />
+        <NavBar isSignedIn={isSignedIn} />
         <Routes>
              <Route path="/" element={<Home isSignedIn={isSignedIn} userName={userName} loading={loading}/>} />
           {isSignedIn === true ?
@@ -65,7 +67,9 @@ useEffect(() => {
           </>
           }
         </Routes>
+        <Footer />
       </Router>
+
     </div>
   );
 }
