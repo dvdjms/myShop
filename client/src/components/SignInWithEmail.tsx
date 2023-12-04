@@ -6,7 +6,7 @@ import { signInUserFetch } from '../services/api';
 import styled from "styled-components";
 import Button from 'react-bootstrap/Button';
 
-const SignInWithEmail = () => {
+const SignInWithEmail: React.FC = () => {
 
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState('');
@@ -47,7 +47,7 @@ const SignInWithEmail = () => {
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}>
         </Input>
-        <Label htmlFor="floatingInput">Username</Label>
+        <Label htmlFor="floatingInput">Username<SpanAsterisk> &#42;</SpanAsterisk></Label>
       </InputContainer>
       <InputContainer  className="form-floating mb-3">
         <Input type="email" 
@@ -59,11 +59,11 @@ const SignInWithEmail = () => {
           onChange={(e) => setEmail(e.target.value)}  
           required>
           </Input>
-        <Label htmlFor="floatingInput">Email</Label>
+        <Label htmlFor="floatingInput">Email<SpanAsterisk> &#42;</SpanAsterisk></Label>
       </InputContainer>
       <InputContainer className="form-floating mb-3">
         <Input type="password" className="form-control" id="floatingPassword" placeholder="Password"></Input>
-          <Label htmlFor="floatingPassword">Password</Label>
+          <Label htmlFor="floatingPassword">Password<SpanAsterisk> &#42;</SpanAsterisk></Label>
       </InputContainer>
       <InputContainer className="form-floating mb-3">
         <Input type="password" 
@@ -75,7 +75,7 @@ const SignInWithEmail = () => {
           onChange={(e) => setPassword(e.target.value)} 
           required>
           </Input>
-        <Label htmlFor="floatingConfirmPassword">Confirm Password</Label>
+        <Label htmlFor="floatingConfirmPassword">Confirm Password<SpanAsterisk> &#42;</SpanAsterisk></Label>
       </InputContainer>
 
       <ButtonContainer>
@@ -99,7 +99,7 @@ const SignInWithEmail = () => {
 
 
 const FormContainer = styled.form`
-  width: 35%;
+
   margin: auto;
   height: 300px;
 `;
@@ -110,7 +110,10 @@ const InputContainer = styled.div`
 `;
 
 const Label = styled.label`
+  margin-top:2px;
   color: gray;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI','Open Sans', 'Helvetica Neue', sans-serif;
 `;
 
 const Input = styled.input`
@@ -163,5 +166,9 @@ const Hr = styled.hr`
   opacity: 1;
 `;
 
+const SpanAsterisk = styled.span`
+  color: #a50016;
+
+;`
 
 export default SignInWithEmail;

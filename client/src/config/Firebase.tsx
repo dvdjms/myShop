@@ -44,21 +44,17 @@ const uiConfiguration = {
     {
       provider: TwitterAuthProvider.PROVIDER_ID,
       fullLabel: "Continue with Twitter",
-
     },
     {
       provider: GithubAuthProvider.PROVIDER_ID,
       fullLabel: "Continue with GitHub",
-
     }
-
   ],
   // Other config options...
   callbacks: {
     signInSuccessWithAuthResult: () => false,
   },
 };
-
 
 // Firebase services
 const auth = getAuth(firebaseApp);

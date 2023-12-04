@@ -5,13 +5,20 @@ import { signOut } from "firebase/auth";
 import { auth } from "../config/Firebase";
 import 'bootstrap/dist/css/bootstrap.css';
 import NavDropdown from 'react-bootstrap/navdropdown';
+import { useModal } from "../Contexts/ModalContext";
+
+type NavbarProps = {
+      isSignedIn: boolean;
+}
 
 
-const NavBar = (props: { isSignedIn: boolean }) => {
+const NavBar: React.FC<NavbarProps> = ({ isSignedIn }) => {
       const navigate = useNavigate();
 
+      const { openModal } = useModal();
+
       const handleLogout = () => {
-      signOut(auth)
+            signOut(auth)
             .then(() => {
                   navigate("/login");
                   console.log("Signed out successfully");
@@ -21,6 +28,7 @@ const NavBar = (props: { isSignedIn: boolean }) => {
             });
       };
 
+      
       return (
 
         <NavigationContainer>
@@ -36,7 +44,7 @@ const NavBar = (props: { isSignedIn: boolean }) => {
                   </NavLink>
             </NavBarContentCenter>
 
-            {props.isSignedIn === true ?
+            {isSignedIn === true ?
             <NavBarContentEnd>
                   <NavDropdown title="Account" id="basic-nav-dropdown">
                   <NavDropdown.Item>
@@ -59,16 +67,15 @@ const NavBar = (props: { isSignedIn: boolean }) => {
             </NavBarContentEnd>
               :
             <NavBarContentEnd >
-                  <NavLink to="/login" >
+                  <NavLink to="/login" className="nav-link" onClick={() => openModal('signIn')}>
                         Login
                   </NavLink>
-                  <NavLink to="/signup" >
+                  <NavLink to="/signup" onClick={() => openModal('signUp')} >
                         Signup
                   </NavLink>
             </NavBarContentEnd>
         }
         </NavigationContainer>
-
   )
 };
 

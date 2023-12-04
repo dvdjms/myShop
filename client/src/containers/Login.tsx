@@ -2,7 +2,7 @@ import React from 'react';
 // import { signInWithEmailAndPassword } from 'firebase/auth';
 // import { auth } from '../config/Firebase';
 import { NavLink } from 'react-router-dom';
-
+import styled from "styled-components";
 
 const Login = () => {
     // const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Login = () => {
 
     return(
         <>
-            <main >        
+            <LoginPage>      
                 <section>
                     <div>                                            
                         <p> Login </p>                       
@@ -42,9 +42,15 @@ const Login = () => {
                     </div>
 
                 </section>
-            </main>
+            </LoginPage>  
         </>
     )
-}
+};
+
+
+const LoginPage = styled.main`
+    height: 100vh;
+    padding: 70px 0 0 0;
+`;
  
 export default Login;

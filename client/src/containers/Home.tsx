@@ -61,10 +61,9 @@ const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean})
  
 
 
-const HomePage = styled.div`
-    height: 500px;
-    /* margin: 0px; */
-
-`
+const HomePage = styled.main`
+    height: 100vh;
+    padding: 70px 0 0 40px;
+`;
 
 export default Home;
