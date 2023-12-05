@@ -46,3 +46,29 @@
       margin-inline-start: 0px;
       margin-inline-end: 0px;
   }
+
+/* modal styles */
+.modal-content {
+    width: 80%;
+    border-radius: 15px;
+    background-color: none;
+    margin: auto;
+}
+
+.nav-tabs .nav-link {
+    border-radius: 15px 15px 0px 0px;
+    width: 100%;
+}
+
+.modal-content {
+    background: none;
+    border: none;
+}
+
+.modal-header {
+    background: none;
+    border-radius: 15px 15px 0px 0px;
+    padding: 0;
+}
+
+

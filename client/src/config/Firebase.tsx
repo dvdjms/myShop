@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore'
-import { EmailAuthProvider, GoogleAuthProvider, TwitterAuthProvider, GithubAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,7 +19,6 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
-
 let firebaseApp;
 
 try {
@@ -33,10 +32,10 @@ const uiConfiguration = {
   signInFlow: 'popup',
   signInSuccessUrl: '/',
   signInOptions: [
-    {
-      provider: EmailAuthProvider.PROVIDER_ID,
-      fullLabel: "Continue with email",
-    },
+    // {
+    //   provider: EmailAuthProvider.PROVIDER_ID,
+    //   fullLabel: "Continue with email",
+    // },
     {
       provider: GoogleAuthProvider.PROVIDER_ID,
       fullLabel: "Continue with Google",
@@ -46,8 +45,8 @@ const uiConfiguration = {
       fullLabel: "Continue with Twitter",
     },
     {
-      provider: GithubAuthProvider.PROVIDER_ID,
-      fullLabel: "Continue with GitHub",
+      provider: FacebookAuthProvider.PROVIDER_ID,
+      fullLabel: "Continue with Facebook",
     }
   ],
   // Other config options...

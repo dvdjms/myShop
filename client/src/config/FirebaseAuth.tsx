@@ -11,7 +11,7 @@ interface Props {
     uiCallback?(ui: firebaseui.auth.AuthUI): void;
     firebaseAuth: Auth;
     className?: string;
-}
+};
 
 const FirebaseAuth = ({uiConfig, firebaseAuth, className, uiCallback}: Props) => {
     const [userSignedIn, setUserSignedIn] = useState(false);

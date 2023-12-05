@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../config/Firebase";
 import 'bootstrap/dist/css/bootstrap.css';
 import NavDropdown from 'react-bootstrap/navdropdown';
-import { useModal } from "../Contexts/ModalContext";
+import { useModal } from "../contexts/ModalContext";
 
 type NavbarProps = {
       isSignedIn: boolean;
@@ -20,7 +20,7 @@ const NavBar: React.FC<NavbarProps> = ({ isSignedIn }) => {
       const handleLogout = () => {
             signOut(auth)
             .then(() => {
-                  navigate("/login");
+                //   navigate("/login");
                   console.log("Signed out successfully");
             })
             .catch((error) => {
@@ -68,10 +68,10 @@ const NavBar: React.FC<NavbarProps> = ({ isSignedIn }) => {
               :
             <NavBarContentEnd >
                   <NavLink to="/login" className="nav-link" onClick={() => openModal('signIn')}>
-                        Login
+                        Sign in
                   </NavLink>
                   <NavLink to="/signup" onClick={() => openModal('signUp')} >
-                        Signup
+                        Register
                   </NavLink>
             </NavBarContentEnd>
         }
@@ -105,10 +105,10 @@ const NavBarContentCenter = styled.div`
 
 const NavBarContentEnd = styled(NavBarContentCenter)`
       justify-content: end;
-      padding-right:35px;
+      padding-right:30px;
       display: flex;
       justify-content: space-between;
-      width: 150px;
+      width: 170px;
 `;
 
 

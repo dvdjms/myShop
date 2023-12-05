@@ -38,6 +38,11 @@ const SignInWithEmail: React.FC = () => {
   return (
     <>
     <FormContainer>
+    <LineContainer>
+        <LineBox><Hr></Hr></LineBox>
+          <OrBox>OR</OrBox>
+        <LineBox><Hr></Hr></LineBox>
+      </LineContainer>
       <InputContainer className="form-floating mb-3">
         <Input type="text" 
           className="form-control" 
@@ -83,15 +88,10 @@ const SignInWithEmail: React.FC = () => {
           className="btn btn-secondary w-100"
           type="submit" 
           onClick={onSubmit}>
-            Create Account
+            Continue
         </StyledButton>
       </ButtonContainer>
 
-      <LineContainer>
-        <LineBox><Hr></Hr></LineBox>
-          <OrBox>OR</OrBox>
-        <LineBox><Hr></Hr></LineBox>
-      </LineContainer>
     </FormContainer>
     </>
   );
@@ -99,7 +99,6 @@ const SignInWithEmail: React.FC = () => {
 
 
 const FormContainer = styled.form`
-
   margin: auto;
   height: 300px;
 `;
@@ -117,7 +116,6 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-  padding-top: 35px !important;
   &:focus {
     box-shadow: rgb(116, 116, 116) 0 0 7px 1px !important;
     border: none;
@@ -150,7 +148,7 @@ const LineContainer = styled.div`
 const LineBox = styled.div`
   width: 40%;
   height: 30px;
-  margin-top: 25px;
+  /* margin-top: 25px; */
 `;
 
 const OrBox = styled(LineBox)`
@@ -168,7 +166,6 @@ const Hr = styled.hr`
 
 const SpanAsterisk = styled.span`
   color: #a50016;
-
 ;`
 
 export default SignInWithEmail;
