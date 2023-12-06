@@ -19,8 +19,8 @@ export const signInUserFetch = async (user_token: string, userUID: string, displ
                   }),
               })
             const data = await response.json();
-            console.log(data.email, "signed in successfully")
-            return data.email;
+            // console.log(data[0], "signed in successfully")
+            // return data.email;
       } catch (error) {
             console.error('Error fetching data', error);
             throw error;

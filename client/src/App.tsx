@@ -1,8 +1,6 @@
 import React, {useState, useEffect}  from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './containers/Home';
-import Login from './containers/Login';
-import Signup from './containers/Signup';
 import Profile from './containers/Profile';
 import Footer from './components/Footer';
 import { onAuthStateChanged, auth } from './config/Firebase';
@@ -20,24 +18,24 @@ const App: React.FC = () => {
 
     onAuthStateChanged(auth, (user) => {
         if(user){
-                setIsSignedIn(true);
+            setIsSignedIn(true);
         }
         else{
-                setIsSignedIn(false);
+            setIsSignedIn(false);
         }
     })
 
     const getUser = async () => {
         try {
-                const userDetails = await getUserDetails();
-                if(userDetails !== undefined){
-                    setUserName(userDetails);
-                    console.log('User Signed In:', userDetails);
-                }
+            const userDetails = await getUserDetails();
+            if(userDetails !== undefined){
+                setUserName(userDetails);
+                console.log('User Signed In:', userDetails);
+            }
         } catch (error) {
                 console.error('Error fetching user details:', error);
         } finally {
-                setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -56,24 +54,17 @@ const App: React.FC = () => {
     return (
         <div className="App">
         <ModalProvider >
-                <Router>
+            <Router>
         
                 <SignInModal></SignInModal>
                 <NavBar isSignedIn={isSignedIn} />
                 <Routes>
                     <Route path="/" element={<Home isSignedIn={isSignedIn} userName={userName} loading={loading}/>} />
-                {isSignedIn === true ?
                     <Route path="/profile" element={<Profile />} />
-                :
-                <>
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/login" element={<Login />} />
-                </>
-                }
                 </Routes>
                 <Footer />
         
-                </Router>
+            </Router>
         </ModalProvider>
         </div>
       );

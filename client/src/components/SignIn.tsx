@@ -26,7 +26,6 @@ const SignIn: React.FC = () =>  {
       
               if(user_token) {
                   signInUserFetch(user_token, userUID, display_name, userEmail);
-                //   navigate("/");
               }
           }
           catch (error) {
