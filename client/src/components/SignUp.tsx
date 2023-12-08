@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { uiConfig } from "../config/Firebase";
-import { auth } from '../config/Firebase';
+import { uiConfig, auth, db, collection, addDoc, 
+    createUserWithEmailAndPassword, updateProfile } from "../config/Firebase";
 import FirebaseAuth from '../config/FirebaseAuth';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { signInUserFetch } from '../services/api';
 import styled from "styled-components";
 import Button from 'react-bootstrap/Button';
@@ -17,7 +16,6 @@ const SignUp: React.FC = () =>  {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('')
     // const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true)
-  
     const emailBorder = useRef<any>();
     const errorMessage = useRef<any>();
 
@@ -41,12 +39,9 @@ const SignUp: React.FC = () =>  {
         }
     };
     
-
-
     const onSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-    
         try {
   
             // if (password !== confirmPassword) {
@@ -54,23 +49,40 @@ const SignUp: React.FC = () =>  {
      
             //     return <p>passwords don't match</p>
             // }
-              const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-              const user = userCredential.user;
-              await updateProfile(userCredential.user, { displayName });
-              const user_token = await user.getIdToken();
-              const display_name = userCredential.user?.displayName || '';
-              const userUID = userCredential.user?.uid || '';
-              const userEmail = userCredential.user?.email || '';
-      
-              if(user_token) {
-                  signInUserFetch(user_token, userUID, display_name, userEmail);
-                //   navigate("/");
-              }
-          }
-          catch (error) {
-              console.error("error", error);
-          };
-      };
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        
+            const user = userCredential.user;
+            await updateProfile(userCredential.user, { displayName });
+            const user_token = await user.getIdToken();
+            const display_name = userCredential.user?.displayName || '';
+            const userUID = userCredential.user?.uid || '';
+            const userEmail = userCredential.user?.email || '';
+
+            await addDoc(collection(db, 'users'), {
+                username: display_name,
+                email: email,
+                uid: userUID,
+            });
+
+            if(user_token) {
+                signInUserFetch(user_token, userUID, display_name, userEmail);
+            //   navigate("/");
+            }
+        }
+        catch (error) {
+            console.error("error", error);
+            switch (error) {
+                case 'auth/email-already-in-use':
+                    console.log("Email already in use");
+                    break;
+                case 'auth/invalid-email':
+                    console.log("Email invaild");
+                    break;
+                default:
+                    console.log(error)
+            }
+        };
+    };
 
 
     return (

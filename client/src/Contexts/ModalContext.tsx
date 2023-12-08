@@ -18,39 +18,39 @@ type ModalProviderProps = {
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
 
-      const [isModalOpen, setIsModalOpen] = useState(false);
-      const [modalType, setModalType] = useState<ModalType | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<ModalType | null>(null);
 
-      const openModal = (type: ModalType) => {
-            setIsModalOpen(true);
-            setModalType(type);
-      };
+    const openModal = (type: ModalType) => {
+        setIsModalOpen(true);
+        setModalType(type);
+    };
 
-      const closeModal = () => {
-            setIsModalOpen(false);
-            setModalType(null);
-      };
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalType(null);
+    };
 
-      const modalContext: ModalContextType = {
-            isModalOpen,
-            modalType,
-            openModal,
-            closeModal,
-      };
+    const modalContext: ModalContextType = {
+        isModalOpen,
+        modalType,
+        openModal,
+        closeModal,
+    };
 
-      return (
-            <ModalContext.Provider value={modalContext}>
-                  {children}
-            </ModalContext.Provider>
-      );
+    return (
+        <ModalContext.Provider value={modalContext}>
+            {children}
+        </ModalContext.Provider>
+    );
 };
 
 export const useModal = (): ModalContextType => {
-      const context = useContext(ModalContext);
-      if (!context) {
-            throw new Error('useModal must be used within a ModalProvider');
-      };
-      return context;
+    const context = useContext(ModalContext);
+    if (!context) {
+        throw new Error('useModal must be used within a ModalProvider');
+    };
+    return context;
 };
 
 

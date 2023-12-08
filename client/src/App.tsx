@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './containers/Home';
 import Profile from './containers/Profile';
 import Footer from './components/Footer';
-import { onAuthStateChanged, auth } from './config/Firebase';
 import NavBar from './components/NavBar';
+import { onAuthStateChanged, auth } from './config/Firebase';
 import { getUserDetails } from './services/api';
+import { UserProvider } from './contexts/UserContext';
 import { ModalProvider } from './contexts/ModalContext';
+
 import SignInModal from './containers/ModalContainer';
 
 
@@ -52,12 +54,13 @@ const App: React.FC = () => {
 
 
     return (
-        <div className="App">
+        // <div className="App">
+        <UserProvider>
         <ModalProvider >
             <Router>
         
                 <SignInModal></SignInModal>
-                <NavBar isSignedIn={isSignedIn} />
+                <NavBar />
                 <Routes>
                     <Route path="/" element={<Home isSignedIn={isSignedIn} userName={userName} loading={loading}/>} />
                     <Route path="/profile" element={<Profile />} />
@@ -66,7 +69,8 @@ const App: React.FC = () => {
         
             </Router>
         </ModalProvider>
-        </div>
+        </UserProvider>
+        // </div>
       );
 }
 

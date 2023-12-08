@@ -38,20 +38,26 @@ const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean})
                         <p>Hello, {props.userName}!</p>
                     </div>
                 ) : (
-                    <p>User not logged in.</p>
+                    <p>Signed out</p>
                 )
             )}
 
         </div>
  
         <div>
-            <button onClick={getData}>Get data</button>
-            <ul>
+        <button onClick={getData}>Get data</button>
+
+            {props.isSignedIn ? (
+       
+                <ul>
                 {products.map((product: any, index) => {
                 
                     return <li key={index}>{product.product} {product.price}</li>;
                 })}
-            </ul>
+                </ul>
+                ) : (
+                    <p></p>
+                )}
 
         </div>
 

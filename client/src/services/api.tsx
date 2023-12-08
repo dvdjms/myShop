@@ -18,9 +18,9 @@ export const signInUserFetch = async (user_token: string, userUID: string, displ
                         'firebase_uid': userUID
                   }),
               })
-            const data = await response.json();
-            // console.log(data[0], "signed in successfully")
-            // return data.email;
+            // const data = await response.json();
+            // console.log(data, "signed in successfully (api.tsk)")
+            return response;
       } catch (error) {
             console.error('Error fetching data', error);
             throw error;

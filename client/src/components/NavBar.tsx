@@ -6,30 +6,27 @@ import { auth } from "../config/Firebase";
 import 'bootstrap/dist/css/bootstrap.css';
 import NavDropdown from 'react-bootstrap/navdropdown';
 import { useModal } from "../contexts/ModalContext";
-
-type NavbarProps = {
-      isSignedIn: boolean;
-};
+import { useUser } from '../contexts/UserContext';
 
 
-const NavBar: React.FC<NavbarProps> = ({ isSignedIn }) => {
-    //   const navigate = useNavigate();
+const NavBar: React.FC = () => {
 
-      const { openModal } = useModal();
+    const { username } = useUser();
+    const { openModal } = useModal();
 
-      const handleLogout = () => {
-            signOut(auth)
-            .then(() => {
-                //   navigate("/");
-                //   console.log("Signed out successfully");
-            })
-            .catch((error) => {
-                  console.error(error);
-            });
-      };
+    const handleLogout = () => {
+        signOut(auth)
+        .then(() => {
+            //   navigate("/");
+            //   console.log("Signed out successfully");
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    };
 
-      
-      return (
+
+    return (
 
         <NavigationContainer>
             <NavBarContentStart>
@@ -44,7 +41,7 @@ const NavBar: React.FC<NavbarProps> = ({ isSignedIn }) => {
                   </NavLink>
             </NavBarContentCenter>
 
-            {isSignedIn === true ?
+            {username ?
             <NavBarContentEnd>
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                     <NavDropdown.Item>
@@ -76,7 +73,7 @@ const NavBar: React.FC<NavbarProps> = ({ isSignedIn }) => {
             </NavBarContentEnd>
         }
         </NavigationContainer>
-  )
+  );
 };
 
 

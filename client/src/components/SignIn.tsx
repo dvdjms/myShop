@@ -17,21 +17,28 @@ const SignIn: React.FC = () =>  {
     const onSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         try {
-              const userCredential = await signInWithEmailAndPassword(auth, email, password);
-              const user = userCredential.user;
-              const user_token = await user.getIdToken();
-              const display_name = userCredential.user?.displayName || '';
-              const userUID = userCredential.user?.uid || '';
-              const userEmail = userCredential.user?.email || '';
-      
-              if(user_token) {
-                  signInUserFetch(user_token, userUID, display_name, userEmail);
-              }
-          }
-          catch (error) {
-              console.error("error", error);
-          };
-      };
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            const user_token = await user.getIdToken();
+            const display_name = userCredential.user?.displayName || '';
+            const userUID = userCredential.user?.uid || '';
+            const userEmail = userCredential.user?.email || '';
+
+            if(user_token) {
+                signInUserFetch(user_token, userUID, display_name, userEmail);
+            }
+            else {
+                console.log('No user token')
+            }
+
+        }
+        catch (signInError) {
+            if (signInError){
+                console.error(signInError, "invalid email");
+            }
+
+        };
+    };
     
 
 
