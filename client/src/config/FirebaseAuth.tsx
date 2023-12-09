@@ -4,6 +4,7 @@ import * as firebaseui from 'firebaseui';
 import { signInUserFetch } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import 'firebaseui/dist/firebaseui.css';
+import { db, doc, setDoc } from "../config/Firebase";
 
 
 interface Props {
@@ -26,16 +27,23 @@ const FirebaseAuth = ({uiConfig, firebaseAuth, className, uiCallback}: Props) =>
 
             // We track the auth state to reset firebaseUi if the user signs out.
             const unregisterAuthObserver = onAuthStateChanged(firebaseAuth, async (user) => {
-                  if (!user && userSignedIn) firebaseUiWidget.reset();
-                  if(user){
-                  const userUID: string | null = user.uid!;
-                  const userEmail: string | null = user.email!;
-                  const display_name: string | null = user.displayName!;
-                  const user_token = await user.getIdToken();
-                  signInUserFetch(user_token, userUID, display_name, userEmail);
-                  navigate("/");
-                  }
-                  setUserSignedIn(!!user);
+                if (!user && userSignedIn) firebaseUiWidget.reset();
+                if(user){
+                const userUID: string | null = user.uid!;
+                const userEmail: string | null = user.email!;
+                const display_name: string | null = user.displayName!;
+                const user_token = await user.getIdToken();
+
+                await setDoc(doc(db, 'users', userUID), {
+                    username: display_name,
+                    email: userEmail,
+                });
+
+                signInUserFetch(user_token, userUID, display_name, userEmail);
+                navigate("/");
+                }
+
+                setUserSignedIn(!!user);
             });
 
             // Trigger the callback if any was set.

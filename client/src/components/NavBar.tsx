@@ -11,7 +11,7 @@ import { useUser } from '../contexts/UserContext';
 
 const NavBar: React.FC = () => {
 
-    const { username } = useUser();
+    const { email } = useUser();
     const { openModal } = useModal();
 
     const handleLogout = () => {
@@ -41,7 +41,7 @@ const NavBar: React.FC = () => {
                   </NavLink>
             </NavBarContentCenter>
 
-            {username ?
+            {email ?
             <NavBarContentEnd>
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                     <NavDropdown.Item>
@@ -73,7 +73,7 @@ const NavBar: React.FC = () => {
             </NavBarContentEnd>
         }
         </NavigationContainer>
-  );
+    );
 };
 
 

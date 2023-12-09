@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { uiConfig } from "../config/Firebase";
 import { auth } from '../config/Firebase';
 import FirebaseAuth from '../config/FirebaseAuth';
@@ -13,9 +13,50 @@ const SignIn: React.FC = () =>  {
     const firebaseAuth = auth;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const emailBorder = useRef<any>();
+    const passwordBorder = useRef<any>();
+    const errorMessageInvalidEmail = useRef<any>();
+    const errorMessageNotRegistered = useRef<any>();
+    const errorMessageEnterPassword = useRef<any>();
+    const errorMessageIncorrectPassword = useRef<any>();
+    const errorMessageTooManyRequests = useRef<any>();
+
+    useEffect(() => {
+        if(email){
+            emailBorder.current.style.border = '';
+            errorMessageNotRegistered.current.style.display = 'none';
+            errorMessageInvalidEmail.current.style.display = 'none';
+        };
+        if(password){
+            passwordBorder.current.style.border = '';
+            errorMessageIncorrectPassword.current.style.display = 'none';
+            errorMessageEnterPassword.current.style.display = 'none';
+            errorMessageTooManyRequests.current.style.display = 'none';
+        };
+    });
+
 
     const onSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
+
+        if(!/^\S+@\S+\.\S+$/.test(email.trim())){
+            emailBorder.current.style.border = 'red solid';
+            emailBorder.current.focus();
+            errorMessageInvalidEmail.current.style.display = 'block';
+            console.log("Email not valid");
+            return;
+        }
+
+        if(!password.trim()){
+            passwordBorder.current.style.border = 'red solid';
+            passwordBorder.current.focus();
+            errorMessageEnterPassword.current.style.display = 'block';
+            errorMessageIncorrectPassword.current.style.display = 'none';
+            errorMessageTooManyRequests.current.style.display = 'none';
+            console.log("No password provided")
+            return;
+        }
+
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
@@ -32,16 +73,40 @@ const SignIn: React.FC = () =>  {
             }
 
         }
-        catch (signInError) {
-            if (signInError){
-                console.error(signInError, "invalid email");
-            }
-
+        catch (error: any) {
+            switch (error.code) {
+                case 'auth/invalid-email':
+                    emailBorder.current.style.border = 'red solid';
+                    emailBorder.current.focus();
+                    errorMessageNotRegistered.current.style.display = 'block';
+                    console.log("Email not registered");
+                    break;
+                case 'auth/user-not-found':
+                    emailBorder.current.style.border = 'red solid';
+                    emailBorder.current.focus();
+                    errorMessageNotRegistered.current.style.display = 'block';
+                    console.log("Email not registered");
+                    break;
+                case 'auth/wrong-password':
+                    passwordBorder.current.style.border = 'red solid';
+                    passwordBorder.current.focus();
+                    errorMessageIncorrectPassword.current.style.display = 'block';
+                    errorMessageTooManyRequests.current.style.display = 'none';
+                    console.log("Password incorrect");
+                    break;
+                case 'auth/too-many-requests':
+                    passwordBorder.current.style.border = 'red solid';
+                    emailBorder.current.style.border = 'red solid';
+                    errorMessageTooManyRequests.current.style.display = 'block';
+                    errorMessageIncorrectPassword.current.style.display = 'none';
+                    console.log("Too many requests");
+                    break;
+                default:
+                    console.log(error);
+            };
         };
     };
     
-
-
     return (
         <>    
 
@@ -58,10 +123,15 @@ const SignIn: React.FC = () =>  {
                 placeholder="name@example.com"
                 name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}  
+                onChange={(e) => setEmail(e.target.value)}
+                ref={emailBorder} 
                 required>
             </Input>
         <Label htmlFor="floatingInput">Email<SpanAsterisk> &#42;</SpanAsterisk></Label>
+        
+        <ErrorMessage ref={errorMessageInvalidEmail}>Please provide a valid email.</ErrorMessage>
+        <ErrorMessage ref={errorMessageNotRegistered}>Email not registered.</ErrorMessage>
+
         </InputContainer>
         <InputContainer className="form-floating mb-3">
             <Input type="password" 
@@ -70,10 +140,16 @@ const SignIn: React.FC = () =>  {
                 placeholder="Password"
                 name="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} 
+                onChange={(e) => setPassword(e.target.value)}
+                ref={passwordBorder} 
                 required>
             </Input>
             <Label htmlFor="floatingPassword">Password<SpanAsterisk> &#42;</SpanAsterisk></Label>
+      
+            <ErrorMessage ref={errorMessageEnterPassword}>Please provide a password.</ErrorMessage>
+            <ErrorMessage ref={errorMessageIncorrectPassword}>Incorrect password.</ErrorMessage>
+            <ErrorMessage ref={errorMessageTooManyRequests}>Too many requests. Try again later.</ErrorMessage>
+
       </InputContainer>
 
         <ButtonContainer>
@@ -87,6 +163,15 @@ const SignIn: React.FC = () =>  {
         </> 
     );
 };
+
+
+const ErrorMessage = styled.p`
+    font-size: 12px;
+    font-family: sans-serif;
+    display: none;
+    color: red;
+    padding: 5px 0 0 5px;
+`;
 
 
 const InputContainer = styled.div`

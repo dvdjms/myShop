@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { auth  } from '../config/Firebase';
 import styled from 'styled-components';
-
+import { useUser } from '../contexts/UserContext';
 
 const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean}) => {
 
     const [products, setProducts] = useState<string[]>([]);
+    const { username } = useUser();
 
     const getData = () => {
         auth.onAuthStateChanged(async (user) => {
@@ -33,9 +34,9 @@ const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean})
             {props.loading ?  (
                 <p>Loading...</p>
             ) : (
-                props.isSignedIn ? (
+                username ? (
                     <div>
-                        <p>Hello, {props.userName}!</p>
+                        <p>Hello, {username}!</p>
                     </div>
                 ) : (
                     <p>Signed out</p>
@@ -47,7 +48,7 @@ const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean})
         <div>
         <button onClick={getData}>Get data</button>
 
-            {props.isSignedIn ? (
+            {username ? (
        
                 <ul>
                 {products.map((product: any, index) => {

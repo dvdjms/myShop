@@ -6,7 +6,7 @@ import { useUser } from '../contexts/UserContext';
 const Profile = () => {
     const { username, email, uid } = useUser();
 
-    if(!username) {
+    if(!email) {
         return <p>Loading...</p>;
     }
 

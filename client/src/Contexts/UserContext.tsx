@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { auth, db, getDoc, doc } from "../config/Firebase";
 
-
 type UserContextType = {
     username: string | null;
     email: string | null;
@@ -21,16 +20,18 @@ export const UserProvider: React.FC<UserProvderProps> = ({children}) => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
             if(authUser) {
                 try {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+            //////////////////////////////////////////////////////////////////////////
+            // not too happy about this timeout function. Need to find better solution
                     const userDoc = await getDoc(doc(db, 'users', authUser.uid));
                     const userData = userDoc.data();
-
                     setUser({
                         username: authUser.displayName,
                         email: authUser.email,
                         uid: authUser.uid,
                         ...userData,
                     });
-                }catch (error) {
+                } catch (error) {
                     console.error('error fetching user data', error);
                     setUser(null);
                 }
@@ -41,23 +42,25 @@ export const UserProvider: React.FC<UserProvderProps> = ({children}) => {
         return () => unsubscribe();
     }, []);
     
-
     return (
         <UserContext.Provider value={user}>
             {children}
         </UserContext.Provider>
     );
-
 };
 
 export const useUser = (): UserContextType => {
     const context = useContext(UserContext);
+    // console.log("context", context)
+    
     if (!context) {
-        return {username: null, email: null, uid: null}
+        return {username: null, email: null, uid: null};
         // need to return an object for when user not signed in
         // throw new Error("useUser must be used within a UserProvider");
-    }
+    };
     return context;
 };
+
+
 
 

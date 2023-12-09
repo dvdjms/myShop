@@ -25,7 +25,7 @@ const App: React.FC = () => {
         else{
             setIsSignedIn(false);
         }
-    })
+    });
 
     const getUser = async () => {
         try {

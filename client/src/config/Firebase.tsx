@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, updateProfile  } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDoc, doc } from 'firebase/firestore'
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+     updateProfile, fetchSignInMethodsForEmail } from "firebase/auth";
+import { getFirestore, collection, addDoc, getDoc, doc, setDoc } from 'firebase/firestore';
 import { GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 
 
@@ -27,7 +28,12 @@ try {
 } catch (error) {
   console.error("Error initializing Firebase app:", error);
 }
-// const firebaseApp = initializeApp(firebaseConfig);
+
+
+if (!firebaseApp) {
+    console.error("Frebase app not initialised propperly")
+}
+
 
 const uiConfiguration = {
   signInFlow: 'popup',
@@ -60,5 +66,6 @@ const uiConfiguration = {
 const auth = getAuth(firebaseApp);
 export const uiConfig = uiConfiguration;
 
-export { auth, onAuthStateChanged, collection, doc, addDoc, getDoc, createUserWithEmailAndPassword, updateProfile };
+export { auth, onAuthStateChanged, collection, doc, addDoc, setDoc,
+    getDoc, createUserWithEmailAndPassword, updateProfile, fetchSignInMethodsForEmail };
 export const db = getFirestore();
