@@ -7,25 +7,37 @@ const Profile = () => {
     const { username, email, uid } = useUser();
 
     if(!email) {
+
+        <Section>
         return <p>Loading...</p>;
-    }
+        </Section>
+    };
+
 
     return(
          <>
+        <Section>
             <H2>
                 Profile
             </H2>
- 
+
             <UserDetails>
                 <p>User name: {username}</p>
                 <p>User email: {email}</p>
                 <p>User ID: {uid}</p>
             </UserDetails>
-
+        </Section>
         </>
 
-    )
-}
+    );
+};
+
+const Section = styled.section`
+    padding: 80px 0 0 50px;
+    height: 100vh;
+`;
+
+
 
 const H2 = styled.h2`
       color: blue;

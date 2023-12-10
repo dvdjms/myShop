@@ -7,11 +7,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import NavDropdown from 'react-bootstrap/navdropdown';
 import { useModal } from "../contexts/ModalContext";
 import { useUser } from '../contexts/UserContext';
+import { useAuth } from "../contexts/AuthContext";
 
 
 const NavBar: React.FC = () => {
-
-    const { email } = useUser();
+    const { isAuthenticated } = useAuth();
+    const { username } = useUser();
     const { openModal } = useModal();
 
     const handleLogout = () => {
@@ -35,49 +36,86 @@ const NavBar: React.FC = () => {
                   </NavLink>
             </NavBarContentStart>
 
+            {isAuthenticated ?
+            <>
             <NavBarContentCenter >
-                  <NavLink to="/" >
-
-                  </NavLink>
+                <p></p>
             </NavBarContentCenter>
-
-            {email ?
+  
             <NavBarContentEnd>
-                <NavDropdown title="Account" id="basic-nav-dropdown">
-                    <NavDropdown.Item>
-                        <NavLink to="/profile">
-                            Profile
-                        </NavLink>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                        <NavLink to="/settings">
-                            Settings
-                        </NavLink>
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item>
-                        <NavLink onClick={handleLogout} to="/">
-                            Sign out
-                        </NavLink>
-                    </NavDropdown.Item>
-                </NavDropdown>
+                <NavBarContentEndSignedIn>
+                    {!username ?  (
+                        <SignedStatus>Loading...</SignedStatus>
+                        ) : (
+                        <SignedStatus>Hello, {username}</SignedStatus>
+                    )}
+                    <NavDropdown title="Account" id="basic-nav-dropdown">
+                        <LinkContainer>
+                            <NavLink to="/profile">
+                                <Link>Profile</Link>
+                            </NavLink>
+                        </LinkContainer>
+                        <LinkContainer>
+                            <NavLink to="/settings">
+                                <Link>Settings</Link>
+                            </NavLink>
+                        </LinkContainer>
+                        <NavDropdown.Divider />
+                        <LinkContainer>
+                            <NavLink onClick={handleLogout} to="/">
+                                <Link>Sign out</Link>
+                            </NavLink>
+                        </LinkContainer>
+                    </NavDropdown>
+                </NavBarContentEndSignedIn>
             </NavBarContentEnd>
+            </>
               :
-            <NavBarContentEnd >
-                  <NavLink to="#" onClick={() => openModal('signIn')}>
+            <NavBarContentEnd>
+                <NavBarContentEndSignedOut>
+                    <NavLink to="#" onClick={() => openModal('signIn')}>
                         Sign in
-                  </NavLink>
-                  <NavLink to="#" onClick={() => openModal('signUp')} >
+                    </NavLink>
+                    <NavLink to="#" onClick={() => openModal('signUp')} >
                         Register
-                  </NavLink>
+                    </NavLink>
+                </NavBarContentEndSignedOut>
             </NavBarContentEnd>
         }
         </NavigationContainer>
     );
 };
 
+const LinkContainer = styled.div`
+    padding: 3px 0 3px 12px;
+    &:hover {
+        background-color: #f2f2f2;
+    }
+`;
+
+const Link = styled.div`
+    color: black;
+    font-size: 14px;
+    text-decoration: none;
+    &:hover {
+        color: #4a014a;
+
+    }
+    &:active {
+        color: #730273;
+        font-weight: bold;
+    }
+`;
+
+const SignedStatus = styled.p`
+    width: 200px;
+    text-align: right;
+    padding-right: 25px;
+`;
+
 
 const NavigationContainer = styled.nav`
+    font-size: 14px;
     height: 50px;
     background-color: white;
     margin: 0px;
@@ -97,16 +135,30 @@ const NavBarContentStart = styled.div`
 
 const NavBarContentCenter = styled.div`
     display: flex;
-    justify-content: center;
+    justify-self: right;
     padding: 10px;
 `;
 
 const NavBarContentEnd = styled(NavBarContentCenter)`
     justify-content: end;
-    padding-right:30px;
+    font-size: 14px;
+    width: 400px;
+`;
+
+const NavBarContentEndSignedIn = styled.div`
+    display:flex;
+    justify-content: space-between;
+    float: left;
+    padding-right: 15px;
+    padding-top: 5px;
+`;
+
+const NavBarContentEndSignedOut = styled.div`
+    width: 130px;
     display: flex;
     justify-content: space-between;
-    width: 170px;
+    padding-right: 15px;
+    padding-top: 5px;
 `;
 
 

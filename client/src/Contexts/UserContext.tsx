@@ -22,7 +22,9 @@ export const UserProvider: React.FC<UserProvderProps> = ({children}) => {
                 try {
                     await new Promise(resolve => setTimeout(resolve, 500));
             //////////////////////////////////////////////////////////////////////////
-            // not too happy about this timeout function. Need to find better solution
+            // not too happy about this timeout function. Need to find a better solution.
+            // It's not fetching username in time. There's a delay when updating name.
+            // Need a useAuth - perhaps a more secure way of handling access.
                     const userDoc = await getDoc(doc(db, 'users', authUser.uid));
                     const userData = userDoc.data();
                     setUser({

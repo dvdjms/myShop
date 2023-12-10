@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { auth  } from '../config/Firebase';
 import styled from 'styled-components';
-import { useUser } from '../contexts/UserContext';
+import { useAuth } from '../contexts/AuthContext';
 
-const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean}) => {
-
+const Home = () => {
+    const { isAuthenticated } = useAuth();
     const [products, setProducts] = useState<string[]>([]);
-    const { username } = useUser();
 
     const getData = () => {
         auth.onAuthStateChanged(async (user) => {
@@ -29,26 +28,16 @@ const Home = (props: { userName: string, loading: boolean, isSignedIn: boolean})
    
     return(
         <HomePage>
-        <div>
+            <div>
 
-            {props.loading ?  (
-                <p>Loading...</p>
-            ) : (
-                username ? (
-                    <div>
-                        <p>Hello, {username}!</p>
-                    </div>
-                ) : (
-                    <p>Signed out</p>
-                )
-            )}
+        <h3>Home</h3>
 
-        </div>
+            </div>
  
         <div>
         <button onClick={getData}>Get data</button>
 
-            {username ? (
+            {isAuthenticated ? (
        
                 <ul>
                 {products.map((product: any, index) => {
