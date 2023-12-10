@@ -26,7 +26,7 @@ const Home = () => {
     };
 
    
-    return(
+    return (
         <HomePage>
             <div>
 

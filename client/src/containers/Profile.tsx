@@ -4,13 +4,10 @@ import styled from 'styled-components';
 import { useUser } from '../contexts/UserContext';
 
 const Profile = () => {
-    const { username, email, uid } = useUser();
+    const { username, email} = useUser();
 
-    if(!email) {
-
-        <Section>
-        return <p>Loading...</p>;
-        </Section>
+    if(!username) {
+        return <Section><p>Loading...</p></Section>
     };
 
 
@@ -24,7 +21,7 @@ const Profile = () => {
             <UserDetails>
                 <p>User name: {username}</p>
                 <p>User email: {email}</p>
-                <p>User ID: {uid}</p>
+                <p>Address:</p>
             </UserDetails>
         </Section>
         </>
@@ -36,7 +33,6 @@ const Section = styled.section`
     padding: 80px 0 0 50px;
     height: 100vh;
 `;
-
 
 
 const H2 = styled.h2`
