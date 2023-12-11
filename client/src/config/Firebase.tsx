@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
-     updateProfile, fetchSignInMethodsForEmail } from "firebase/auth";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, 
+    fetchSignInMethodsForEmail } from "firebase/auth";
 import { getFirestore, collection, addDoc, getDoc, doc, setDoc } from 'firebase/firestore';
 import { GoogleAuthProvider, TwitterAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 
@@ -66,6 +67,7 @@ const uiConfiguration = {
 const auth = getAuth(firebaseApp);
 export const uiConfig = uiConfiguration;
 
-export { auth, onAuthStateChanged, collection, doc, addDoc, setDoc,
-    getDoc, createUserWithEmailAndPassword, updateProfile, fetchSignInMethodsForEmail };
+export { auth, getAuth, onAuthStateChanged, collection, doc, addDoc, setDoc, getDoc,
+    signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword, 
+    updateProfile, fetchSignInMethodsForEmail };
 export const db = getFirestore();

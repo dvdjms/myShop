@@ -1,12 +1,11 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { uiConfig } from "../config/Firebase";
-import { auth } from '../config/Firebase';
+import { auth, signInWithEmailAndPassword, uiConfig } from '../config/Firebase';
 import FirebaseAuth from '../config/FirebaseAuth';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import styled from "styled-components";
-import Button from 'react-bootstrap/Button';
-import { OrLine } from './OrLine';
+import { OrLine } from '../components/OrLine';
 import { signInUserFetch } from '../services/api';
+import { BigButton } from '../components/BigButton';
+import { InputPassword } from '../components/InputPassword';
 
 
 const SignIn: React.FC = () =>  {
@@ -20,6 +19,9 @@ const SignIn: React.FC = () =>  {
     const errorMessageEnterPassword = useRef<any>();
     const errorMessageIncorrectPassword = useRef<any>();
     const errorMessageTooManyRequests = useRef<any>();
+
+    // const [passwordError, setPasswordError] = useState<boolean>(false);
+
 
     useEffect(() => {
         if(email){
@@ -150,20 +152,28 @@ const SignIn: React.FC = () =>  {
             <ErrorMessage ref={errorMessageIncorrectPassword}>Incorrect password.</ErrorMessage>
             <ErrorMessage ref={errorMessageTooManyRequests}>Too many requests. Try again later.</ErrorMessage>
 
-      </InputContainer>
+        </InputContainer>
 
-        <ButtonContainer>
-            <StyledButton as={Button}
-                className="btn btn-secondary w-100"
-                type="submit" 
-                onClick={onSubmit}>
-                    Sign in
-            </StyledButton>
-        </ButtonContainer>
+        {/* <InputPassword 
+            hasError={passwordError} 
+            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordBorder}
+            title="Passworddd"
+            value={password} /> */}
+
+        <BigButton title="Sign In" onClick={onSubmit} />
+        
+        <ResetPassword>Forgot password?</ResetPassword>
         </> 
     );
 };
 
+
+const ResetPassword = styled.p`
+    padding: 30px 0 0 55px;
+    font-size: 12px;
+    width: 50%;
+`;
 
 const ErrorMessage = styled.p`
     font-size: 12px;
@@ -172,7 +182,6 @@ const ErrorMessage = styled.p`
     color: red;
     padding: 5px 0 0 5px;
 `;
-
 
 const InputContainer = styled.div`
     margin: auto;
@@ -197,25 +206,10 @@ const SpanAsterisk = styled.span`
   color: #a50016;
 ;`
 
-const ButtonContainer = styled.div`
-  padding: 0 50px 0 50px;
-  margin-top: 25px;
-  display: flex;
-  justify-content: center;
-`;
-
-const StyledButton = styled.div`
-  font-size: 14px;
-  height: 39px;
-  width: 222px !important;
-  border-radius: 2px;
-`;
-
 const FirebaseAuthContainer = styled.section`
     margin-top: 50px;
     margin-bottom: 25px;
 `;
-
 
 
 export default SignIn;

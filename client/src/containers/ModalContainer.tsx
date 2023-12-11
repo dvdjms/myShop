@@ -4,8 +4,8 @@ import Nav from 'react-bootstrap/Nav';
 import { auth } from '../config/Firebase';
 import styled from "styled-components";
 import { useModal } from '../contexts/ModalContext'; 
-import SignIn from '../components/SignIn';
-import SignUp from '../components/SignUp';
+import SignIn from '../screens/SignIn';
+import SignUp from '../screens/SignUp';
 import '../index.css'
 
 
@@ -61,7 +61,7 @@ const SignInModal: React.FC = () =>  {
                 </Modal.Body>
 
                 <Modal.Footer as={Footer}>
-                    <CancelButton onClick={closeModal}>&#10005;</CancelButton>
+                    <CloseButton onClick={closeModal}>&#10005;</CloseButton>
                 </Modal.Footer>
         </Modal>
     </>
@@ -73,9 +73,11 @@ const Footer = styled.div`
     border: none;
     background-color: white;
     border-radius: 0 0 15px 15px;
+    height: 70px;
+    padding: 20px 0 0 0;
 `;
 
-const CancelButton = styled.button`
+const CloseButton = styled.button`
     background: none;
     border: none;
     border-radius: 50%;
@@ -96,7 +98,7 @@ const CancelButton = styled.button`
 const ModalBody = styled.div`
     padding: 0px;
     background-color: white;
-    height: 65vh;
+    height: 72vh;
 `;
 
 const Tabs = styled(Nav).attrs({

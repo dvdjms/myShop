@@ -5,8 +5,8 @@ import { uiConfig, auth, db, doc, setDoc,
 import FirebaseAuth from '../config/FirebaseAuth';
 import { signInUserFetch } from '../services/api';
 import styled from "styled-components";
-import Button from 'react-bootstrap/Button';
-import { OrLine } from './OrLine';
+import { OrLine } from '../components/OrLine';
+import { BigButton } from '../components/BigButton';
 
 
 const SignUp: React.FC = () =>  {
@@ -84,7 +84,7 @@ const SignUp: React.FC = () =>  {
         setRegisterPageOne(true);
     };
     
-    const onSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         try {
@@ -185,14 +185,7 @@ const SignUp: React.FC = () =>  {
         <ErrorMessage ref={errorMessageEmailAlreadyInUse}>Email already in use.</ErrorMessage>
 
         </InputContainer>
-        <ButtonContainer>
-            <StyledButton as={Button}
-                className="btn btn-secondary w-100"
-                type="submit"
-                onClick={handleContinue}>
-                    Continue
-            </StyledButton>
-        </ButtonContainer>
+        <BigButton title="Continue" onClick={handleContinue} />
   
         </>
         )
@@ -252,14 +245,8 @@ const SignUp: React.FC = () =>  {
 
         </InputContainer>
 
-        <ButtonContainer>
-            <StyledButton as={Button}
-                className="btn btn-secondary w-100"
-                type="submit" 
-                onClick={onSubmit}>
-                    Create Account
-            </StyledButton>
-        </ButtonContainer>
+        <BigButton title="Create Account" onClick={handleSubmit} />
+
         </>
         )}
         </>
@@ -320,20 +307,6 @@ const Input = styled.input`
 const SpanAsterisk = styled.span`
     color: #a50016;
 ;`
-
-const ButtonContainer = styled.div`
-    padding: 0 50px 0 50px;
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-`;
-
-const StyledButton = styled.div`
-    font-size: 14px;
-    height: 39px;
-    width: 222px !important;
-    border-radius: 2px;
-`;
 
 const FirebaseAuthContainer = styled.section`
     margin-top: 50px;
