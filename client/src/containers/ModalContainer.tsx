@@ -4,8 +4,8 @@ import Nav from 'react-bootstrap/Nav';
 import { auth } from '../config/Firebase';
 import styled from "styled-components";
 import { useModal } from '../contexts/ModalContext'; 
-import SignIn from '../screens/SignIn';
-import SignUp from '../screens/SignUp';
+import SignIn from '../pages/SignInTest';/////////////////////////////////////////
+import SignUp from '../pages/SignUp';
 import '../index.css'
 
 

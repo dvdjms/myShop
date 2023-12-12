@@ -5,13 +5,14 @@ import styled from "styled-components";
 import { OrLine } from '../components/OrLine';
 import { signInUserFetch } from '../services/api';
 import { BigButton } from '../components/BigButton';
-import { InputPassword } from '../components/InputPassword';
+// import { FloatingInput } from '../components/FloatingInput';
 
 
 const SignIn: React.FC = () =>  {
     const firebaseAuth = auth;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
     const emailBorder = useRef<any>();
     const passwordBorder = useRef<any>();
     const errorMessageInvalidEmail = useRef<any>();
@@ -20,28 +21,35 @@ const SignIn: React.FC = () =>  {
     const errorMessageIncorrectPassword = useRef<any>();
     const errorMessageTooManyRequests = useRef<any>();
 
+    // const inputRef = useRef<HTMLInputElement>(null);
+    // const passwordBorder = useRef<HTMLInputElement>(null);
+    // const emailBorder = useRef<HTMLInputElement>(null);
     // const [passwordError, setPasswordError] = useState<boolean>(false);
+    // const [emailError, setEmailError] = useState<boolean>(false);
 
 
     useEffect(() => {
         if(email){
+            // setEmailError(false)
             emailBorder.current.style.border = '';
             errorMessageNotRegistered.current.style.display = 'none';
             errorMessageInvalidEmail.current.style.display = 'none';
         };
         if(password){
             passwordBorder.current.style.border = '';
+            // setPasswordError(false)
             errorMessageIncorrectPassword.current.style.display = 'none';
             errorMessageEnterPassword.current.style.display = 'none';
             errorMessageTooManyRequests.current.style.display = 'none';
         };
-    });
+    },[email, password]);
 
 
     const onSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         if(!/^\S+@\S+\.\S+$/.test(email.trim())){
+            // setEmailError(true)
             emailBorder.current.style.border = 'red solid';
             emailBorder.current.focus();
             errorMessageInvalidEmail.current.style.display = 'block';
@@ -52,6 +60,7 @@ const SignIn: React.FC = () =>  {
         if(!password.trim()){
             passwordBorder.current.style.border = 'red solid';
             passwordBorder.current.focus();
+            // setPasswordError(true)
             errorMessageEnterPassword.current.style.display = 'block';
             errorMessageIncorrectPassword.current.style.display = 'none';
             errorMessageTooManyRequests.current.style.display = 'none';
@@ -78,12 +87,14 @@ const SignIn: React.FC = () =>  {
         catch (error: any) {
             switch (error.code) {
                 case 'auth/invalid-email':
+                    // setEmailError(true)
                     emailBorder.current.style.border = 'red solid';
                     emailBorder.current.focus();
                     errorMessageNotRegistered.current.style.display = 'block';
                     console.log("Email not registered");
                     break;
                 case 'auth/user-not-found':
+                    // setEmailError(true)
                     emailBorder.current.style.border = 'red solid';
                     emailBorder.current.focus();
                     errorMessageNotRegistered.current.style.display = 'block';
@@ -92,12 +103,15 @@ const SignIn: React.FC = () =>  {
                 case 'auth/wrong-password':
                     passwordBorder.current.style.border = 'red solid';
                     passwordBorder.current.focus();
+                    // setPasswordError(true)
                     errorMessageIncorrectPassword.current.style.display = 'block';
                     errorMessageTooManyRequests.current.style.display = 'none';
                     console.log("Password incorrect");
                     break;
                 case 'auth/too-many-requests':
                     passwordBorder.current.style.border = 'red solid';
+                    // setPasswordError(true)
+                    // setEmailError(true)
                     emailBorder.current.style.border = 'red solid';
                     errorMessageTooManyRequests.current.style.display = 'block';
                     errorMessageIncorrectPassword.current.style.display = 'none';
@@ -154,12 +168,29 @@ const SignIn: React.FC = () =>  {
 
         </InputContainer>
 
-        {/* <InputPassword 
-            hasError={passwordError} 
+
+        {/* <FloatingInput 
+            hasError={emailError} 
+            onChange={(e) => setEmail(e.target.value)}
+            ref={emailBorder}
+            title="Email"
+            type="email"
+            value={email} />
+
+        <ErrorMessage ref={errorMessageInvalidEmail}>Please provide a valid email.</ErrorMessage>
+        <ErrorMessage ref={errorMessageNotRegistered}>Email not registered.</ErrorMessage>
+
+        <FloatingInput 
+            hasError={passwordError}
             onChange={(e) => setPassword(e.target.value)}
             ref={passwordBorder}
-            title="Passworddd"
-            value={password} /> */}
+            title="Password"
+            type="password"
+            value={password} />
+
+        <ErrorMessage ref={errorMessageEnterPassword}>Please provide a password.</ErrorMessage>
+        <ErrorMessage ref={errorMessageIncorrectPassword}>Incorrect password.</ErrorMessage>
+        <ErrorMessage ref={errorMessageTooManyRequests}>Too many requests. Try again later.</ErrorMessage> */}
 
         <BigButton title="Sign In" onClick={onSubmit} />
         

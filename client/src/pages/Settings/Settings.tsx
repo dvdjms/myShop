@@ -1,6 +1,6 @@
 import React from 'react';
-import { useUser } from '../contexts/UserContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useUser } from '../../contexts/UserContext';
+import { useAuth } from '../../contexts/AuthContext';
 import styled from "styled-components";
 
 

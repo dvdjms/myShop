@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { auth  } from '../config/Firebase';
+import { auth  } from '../../config/Firebase';
 import styled from 'styled-components';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Home = () => {
     const { isAuthenticated } = useAuth();

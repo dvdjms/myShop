@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './containers/Home';
-import Profile from './containers/Profile';
+import Home from './pages/Home/Home';
+import Profile from './pages/Profile/Profile';
 import Footer from './components/Footer';
 import NavBar from './components/NavBar';
-import Settings from './containers/Settings';
+import Settings from './pages/Settings/Settings';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserProvider } from './contexts/UserContext';
 import { ModalProvider } from './contexts/ModalContext';
