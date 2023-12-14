@@ -7,7 +7,8 @@ import { signInUserFetch } from '../services/api';
 import styled from "styled-components";
 import { OrLine } from '../components/OrLine';
 import { BigButton } from '../components/BigButton';
-
+import { FloatingInput } from '../components/FloatingInput';
+import { BackArrow } from '../components/BackArrow';
 
 const SignUp: React.FC = () =>  {
     const firebaseAuth = auth;
@@ -16,64 +17,61 @@ const SignUp: React.FC = () =>  {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('')
-    const emailBorder = useRef<any>();
-    const displayNameBorder = useRef<any>();
-    const passwordBorder = useRef<any>();
-    const confirmPasswordBorder = useRef<any>();
-    const errorMessageEnterEmail = useRef<any>();
-    const errorMessageInvalidEmail = useRef<any>();
-    const errorMessageEmailAlreadyInUse = useRef<any>();
-    const errorMessagePasswordMissMatch = useRef<any>();
-    const errorMessageEnterUsername = useRef<any>();
-    const errorMessageEnterPassword = useRef<any>();
-    const errorMessageEnterConfirmPassword = useRef<any>();
-    const errorMessagePasswordWeak = useRef<any>();
+
+    const [errorMsgEmail, setErrorMsgEmail] = useState<string | null>(null);
+    const [errorMsgUsername, setErrorMsgUsername] = useState<string | null>(null);
+    const [errorMsgPassword, setErrorMsgPassword] = useState<string | null>(null);
+    const [errorMsgConfirmPassword, setErrorMsgConfirmPassword] = useState<string | null>(null);
+
+    const [emailError, setEmailError] = useState<boolean>(false);
+    const [usernameError, setUsernameError] = useState<boolean>(false);
+    const [passwordError, setPasswordError] = useState<boolean>(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState<boolean>(false);
+
+    const emailBorder = useRef<HTMLInputElement>(null);
+    const displayNameBorder = useRef<HTMLInputElement>(null);
+    const passwordBorder = useRef<HTMLInputElement>(null);
+    const confirmPasswordBorder = useRef<HTMLInputElement>(null);
+
 
     useEffect(() => {
         if(email && !registerPageOne){
-            emailBorder.current.style.border = '';
-            errorMessageEnterEmail.current.style.display = 'none';
-            errorMessageInvalidEmail.current.style.display = 'none';
-            errorMessageEmailAlreadyInUse.current.style.display = 'none';
+            setEmailError(false);
+            setErrorMsgEmail(null);
         };
         if(displayName) {
-            displayNameBorder.current.style.border = '';
-            errorMessageEnterUsername.current.style.display = 'none';
+            setUsernameError(false);
+            setErrorMsgUsername(null);
         };
         if(password) {
-            passwordBorder.current.style.border = '';
-            errorMessageEnterPassword.current.style.display = 'none';
+            setPasswordError(false);
+            setErrorMsgPassword(null);
         };
         if(confirmPassword) {
-            confirmPasswordBorder.current.style.border = '';
-            errorMessageEnterConfirmPassword.current.style.display = 'none';
-            errorMessagePasswordMissMatch.current.style.display = 'none';
-            errorMessagePasswordWeak.current.style.display = 'none';
+            setConfirmPasswordError(false);
+            setErrorMsgConfirmPassword(null);
         };
-    });
+    },[email, displayName, password, confirmPassword, registerPageOne]);
 
 
     const handleContinue = async () => {
         try {
             if(!email.trim()){
-                emailBorder.current.style.border = 'red solid';
-                emailBorder.current.focus();
-                errorMessageEnterEmail.current.style.display = 'block';
-                console.log("No password provided");
+                setEmailError(true);
+                setErrorMsgEmail('Please enter email.');
+                console.log("No email provided");
                 return;
             };
             if(!/^\S+@\S+\.\S+$/.test(email.trim())){
-                emailBorder.current.style.border = 'red solid';
-                emailBorder.current.focus();
-                errorMessageInvalidEmail.current.style.display = 'block';
+                setEmailError(true);
+                setErrorMsgEmail('Please provide valid email.');
                 console.log("Email not valid");
                 return;
             };
             const alreadyExists = await fetchSignInMethodsForEmail(auth, email);
             if (alreadyExists.length > 0) {
-                emailBorder.current.style.border = 'red solid';
-                emailBorder.current.focus();
-                errorMessageEmailAlreadyInUse.current.style.display = 'block';
+                setEmailError(true);
+                setErrorMsgEmail('Email already in use.');
                 console.log("Email already in use");
                 return;
             };
@@ -89,35 +87,29 @@ const SignUp: React.FC = () =>  {
 
         try {
             if(!displayName.trim()){
-                displayNameBorder.current.style.border = 'red solid';
-                displayNameBorder.current.focus();
-                errorMessageEnterUsername.current.style.display = 'block';
+                setUsernameError(true);
+                setErrorMsgUsername('Please enter a username.');
                 console.log("No username provided");
                 return;
             }
 
             if(!password.trim()){
-                passwordBorder.current.style.border = 'red solid';
-                passwordBorder.current.focus();
-                errorMessageEnterPassword.current.style.display = 'block';
-                errorMessageEnterUsername.current.style.display = 'none';
+                setPasswordError(true);
+                setErrorMsgPassword('Please enter a password.');
                 console.log("No password provided");
                 return;
             };
 
             if (!confirmPassword.trim()) {
-                confirmPasswordBorder.current.style.border = 'red solid';
-                confirmPasswordBorder.current.focus();
-                errorMessageEnterConfirmPassword.current.style.display = 'block';
-                errorMessageEnterPassword.current.style.display = 'none';
+                setConfirmPasswordError(true);
+                setErrorMsgConfirmPassword('Please enter again to confirm.');
                 console.log("No password provided");
                 return;
             };
   
             if (password.trim() !== confirmPassword.trim()) {
-                confirmPasswordBorder.current.style.border = 'red solid';
-                confirmPasswordBorder.current.focus();
-                errorMessagePasswordMissMatch.current.style.display = 'block';
+                setConfirmPasswordError(true);
+                setErrorMsgConfirmPassword('Passwords don\'t match.');
                 console.log("No confirm password provided");
                 return;
             };
@@ -138,17 +130,13 @@ const SignUp: React.FC = () =>  {
 
             if(user_token) {
                 signInUserFetch(user_token, userUID, display_name, userEmail);
-            //   navigate("/");
             }
         }
         catch (error: any) {
-            console.error("error", error.code);
             switch (error.code) {
                 case 'auth/weak-password':
-                    passwordBorder.current.style.border = 'red solid';
-                    passwordBorder.current.focus();
-                    confirmPasswordBorder.current.style.display = 'block';
-                    errorMessagePasswordWeak.current.style.display = 'block';
+                    setConfirmPasswordError(true);
+                    setErrorMsgConfirmPassword('Password should be at least 6 characters');
                     console.log("password too weak");
                     break;
                 default:
@@ -167,24 +155,15 @@ const SignUp: React.FC = () =>  {
         </FirebaseAuthContainer>
 
         <OrLine></OrLine>
-        <InputContainer  className="form-floating mb-3">
-            <Input type="email"
-                className="form-control" 
-                id="floatingInput" 
-                placeholder="name@example.com"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)} 
-                required
-                ref={emailBorder}>
-            </Input>
-        <Label htmlFor="floatingInput">Email<SpanAsterisk> &#42;</SpanAsterisk></Label>
-  
-        <ErrorMessage ref={errorMessageEnterEmail}>Please enter email.</ErrorMessage>
-        <ErrorMessage ref={errorMessageInvalidEmail}>Please provide valid email.</ErrorMessage>
-        <ErrorMessage ref={errorMessageEmailAlreadyInUse}>Email already in use.</ErrorMessage>
+        <FloatingInput 
+            $error={emailError}
+            onChange={(e) => setEmail(e.target.value)}
+            ref={emailBorder}
+            title="Email"
+            type="email"
+            value={email} />
+        <ErrorMessage>{errorMsgEmail}</ErrorMessage>
 
-        </InputContainer>
         <BigButton title="Continue" onClick={handleContinue} />
   
         </>
@@ -192,58 +171,36 @@ const SignUp: React.FC = () =>  {
             :
         (
         <>
-        <ArrowBack onClick={() => setRegisterPageOne(false)}>&#8592;</ArrowBack>
+        <BackArrow onClick={() => setRegisterPageOne(false)} />
+
         <H5>Create your username and password</H5>
-        <InputContainer className="form-floating mb-3">
-            <Input type="text" 
-                className="form-control" 
-                id="floatingInput"
-                name="name"
-                placeholder="Username"
-                value={displayName}
-                ref={displayNameBorder}
-                onChange={(e) => setDisplayName(e.target.value)}>
-            </Input>
-            <Label htmlFor="floatingInput">Username<SpanAsterisk> &#42;</SpanAsterisk></Label>
-       
-            <ErrorMessage ref={errorMessageEnterUsername}>Please enter a username.</ErrorMessage>
 
-        </InputContainer>
-        <InputContainer className="form-floating mb-3">
-            <Input type="password" 
-                className="form-control" 
-                id="floatingPassword" 
-                placeholder="Password"
-                name="password"
-                value={password}
-                ref={passwordBorder}
-                onChange={(e) => setPassword(e.target.value)} 
-                required>
-            </Input>
+        <FloatingInput 
+            $error={usernameError}
+            onChange={(e) => setDisplayName(e.target.value)}
+            ref={displayNameBorder}
+            title="Username"
+            type="text"
+            value={displayName} />
+        <ErrorMessage>{errorMsgUsername}</ErrorMessage>
 
-            <ErrorMessage ref={errorMessageEnterPassword}>Please enter a password.</ErrorMessage>
+        <FloatingInput 
+            $error={passwordError}
+            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordBorder}
+            title="Password"
+            type="password"
+            value={password} />
+        <ErrorMessage>{errorMsgPassword}</ErrorMessage>
 
-     
-            <Label htmlFor="floatingPassword">Password<SpanAsterisk> &#42;</SpanAsterisk></Label>
-        </InputContainer>
-        <InputContainer className="form-floating mb-3">
-            <Input type="password" 
-                className="form-control" 
-                id="floatingConfirmPassword" 
-                placeholder="Confirm Password"
-                name="confirmPassword"
-                value={confirmPassword}
-                ref={confirmPasswordBorder}
-                onChange={(e) => setConfirmPassword(e.target.value)} 
-                required>
-            </Input>
-            <Label htmlFor="floatingConfirmPassword">Confirm Password<SpanAsterisk> &#42;</SpanAsterisk></Label>
-       
-            <ErrorMessage ref={errorMessageEnterConfirmPassword}>Please enter again to confirm.</ErrorMessage>
-            <ErrorMessage ref={errorMessagePasswordMissMatch}>Passwords don't match.</ErrorMessage>
-            <ErrorMessage ref={errorMessagePasswordWeak}>Password should be at least 6 characters</ErrorMessage>
-
-        </InputContainer>
+        <FloatingInput 
+            $error={confirmPasswordError}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            ref={confirmPasswordBorder}
+            title="Confirm password"
+            type="password"
+            value={confirmPassword} />
+        <ErrorMessage>{errorMsgConfirmPassword}</ErrorMessage>
 
         <BigButton title="Create Account" onClick={handleSubmit} />
 
@@ -256,57 +213,14 @@ const SignUp: React.FC = () =>  {
 const ErrorMessage = styled.p`
     font-size: 12px;
     font-family: sans-serif;
-    display: none;
     color: red;
-    padding: 5px 0 0 5px;
-`;
-
-
-const ArrowBack = styled.button`
-    background: none;
-    border: none;
-    border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    font-size: 25px;
-    color: #525252;
-    margin-left: 10px;
-    &:hover {
-        background-color: #e7e7e7;
-        cursor: pointer;
-    };
-    &:focus {
-        background-color: #ababab;
-    };
+    padding: 5px 0 0 65px;
 `;
 
 const H5 = styled.h5`
     margin: 20px 0 50px 0;   
     text-align: center;
 `;
-
-const InputContainer = styled.div`
-    margin: auto;
-    width: 300px;
-`;
-
-const Label = styled.label`
-    margin-top: 2px;
-    color: #808080;
-    font-size: 14px;
-    font-family: system-ui, 'Segoe UI','Open Sans', 'Helvetica Neue', sans-serif;
-`;
-
-const Input = styled.input`
-    &:focus {
-        box-shadow: rgb(116, 116, 116) 0 0 7px 1px !important;
-        border: none;
-    }
-`;
-
-const SpanAsterisk = styled.span`
-    color: #a50016;
-;`
 
 const FirebaseAuthContainer = styled.section`
     margin-top: 50px;

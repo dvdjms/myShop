@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import { auth } from '../config/Firebase';
 import styled from "styled-components";
 import { useModal } from '../contexts/ModalContext'; 
-import SignIn from '../pages/SignInTest';/////////////////////////////////////////
+import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import '../index.css'
 
@@ -30,41 +30,40 @@ const SignInModal: React.FC = () =>  {
         return () => unsubscribe();
     }, [isModalOpen, modalType, closeModal, firebaseAuth]);
 
-
-    
-      return (
+    return (
         <>    
-            <Modal show={isModalOpen} onHide={closeModal}>
-                <Modal.Header>
-                    <Tabs activeKey={activeTab as string} onSelect={(k) => switchTab(k as 'signIn' | 'signUp')}>
-                        <Nav.Item>
-                            <Nav.Link as={NavLink} eventKey="signIn">Sign in</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item >
-                            <Nav.Link as={NavLink} eventKey="signUp">Register</Nav.Link>
-                        </Nav.Item> 
-                    </Tabs>
-                </Modal.Header>
-                <Modal.Body as={ModalBody}>
-                    <TabContent>
-                    {activeTab === 'signIn' && (
-                    <>
-                        <SignIn />
-                    </>
-                    )}        
-                    {activeTab === 'signUp' && (
-                    <>
-                        <SignUp />
-                    </>
-                    )}
-                    </TabContent>
-                </Modal.Body>
+        <Modal show={isModalOpen} onHide={closeModal}>
+            <Modal.Header>
+                <Tabs activeKey={activeTab as string} onSelect={(k) => switchTab(k as 'signIn' | 'signUp')}>
+                    <Nav.Item>
+                        <Nav.Link as={NavLink} eventKey="signIn">Sign in</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item >
+                        <Nav.Link as={NavLink} eventKey="signUp">Register</Nav.Link>
+                    </Nav.Item> 
+                </Tabs>
+            </Modal.Header>
+            
+            <Modal.Body as={ModalBody}>
+                <TabContent>
+                {activeTab === 'signIn' && (
+                <>
+                    <SignIn />
+                </>
+                )}        
+                {activeTab === 'signUp' && (
+                <>
+                    <SignUp />
+                </>
+                )}
+                </TabContent>
+            </Modal.Body>
 
-                <Modal.Footer as={Footer}>
-                    <CloseButton onClick={closeModal}>&#10005;</CloseButton>
-                </Modal.Footer>
+            <Modal.Footer as={Footer}>
+                <CloseButton onClick={closeModal}>&#10005;</CloseButton>
+            </Modal.Footer>
         </Modal>
-    </>
+        </>
     );
 };
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Auth, onAuthStateChanged } from 'firebase/auth';
 import * as firebaseui from 'firebaseui';
-import { signInUserFetch } from '../services/api';
-import { useNavigate } from 'react-router-dom';
 import 'firebaseui/dist/firebaseui.css';
+import { signInUserFetch } from '../services/api';
 import { db, doc, setDoc } from "../config/Firebase";
 
 

@@ -20,7 +20,6 @@ const App: React.FC = () => {
         <UserProvider>
         <ModalProvider>
             <Router>
-        
                 <SignInModal></SignInModal>
                 <NavBar />
                 <Routes>
@@ -29,7 +28,6 @@ const App: React.FC = () => {
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
                 <Footer />
-        
             </Router>
         </ModalProvider>
         </UserProvider>

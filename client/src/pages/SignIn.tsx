@@ -5,68 +5,56 @@ import styled from "styled-components";
 import { OrLine } from '../components/OrLine';
 import { signInUserFetch } from '../services/api';
 import { BigButton } from '../components/BigButton';
-// import { FloatingInput } from '../components/FloatingInput';
+import { BackArrow } from '../components/BackArrow';
+import { FloatingInput } from '../components/FloatingInput';
+import ForgotPassword from './ForgotPassword';
 
 
 const SignIn: React.FC = () =>  {
     const firebaseAuth = auth;
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const emailBorder = useRef<any>();
-    const passwordBorder = useRef<any>();
-    const errorMessageInvalidEmail = useRef<any>();
-    const errorMessageNotRegistered = useRef<any>();
-    const errorMessageEnterPassword = useRef<any>();
-    const errorMessageIncorrectPassword = useRef<any>();
-    const errorMessageTooManyRequests = useRef<any>();
-
-    // const inputRef = useRef<HTMLInputElement>(null);
-    // const passwordBorder = useRef<HTMLInputElement>(null);
-    // const emailBorder = useRef<HTMLInputElement>(null);
-    // const [passwordError, setPasswordError] = useState<boolean>(false);
-    // const [emailError, setEmailError] = useState<boolean>(false);
-
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [errorMsgEmail, setErrorMsgEmail] = useState<string | null>(null);
+    const [errorMsgPassword, setErrorMsgPassword] = useState<string | null>(null);
+    const [emailError, setEmailError] = useState<boolean>(false);
+    const [passwordError, setPasswordError] = useState<boolean>(false);
+    const emailBorder = useRef<HTMLInputElement>(null);
+    const passwordBorder = useRef<HTMLInputElement>(null);
+    const [forgotPassword, setForgotPassword] = useState<boolean>(false);
 
     useEffect(() => {
         if(email){
-            // setEmailError(false)
-            emailBorder.current.style.border = '';
-            errorMessageNotRegistered.current.style.display = 'none';
-            errorMessageInvalidEmail.current.style.display = 'none';
+            setEmailError(false);
+            setErrorMsgEmail(null);
         };
         if(password){
-            passwordBorder.current.style.border = '';
-            // setPasswordError(false)
-            errorMessageIncorrectPassword.current.style.display = 'none';
-            errorMessageEnterPassword.current.style.display = 'none';
-            errorMessageTooManyRequests.current.style.display = 'none';
+            setPasswordError(false);
+            setErrorMsgPassword(null);
         };
-    },[email, password]);
-
+    },[setEmailError, email, password]);
 
     const onSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         if(!/^\S+@\S+\.\S+$/.test(email.trim())){
-            // setEmailError(true)
-            emailBorder.current.style.border = 'red solid';
-            emailBorder.current.focus();
-            errorMessageInvalidEmail.current.style.display = 'block';
+            setEmailError(true);
+            setErrorMsgEmail("Please provide a valid email.");
             console.log("Email not valid");
             return;
-        }
+        };
 
         if(!password.trim()){
-            passwordBorder.current.style.border = 'red solid';
-            passwordBorder.current.focus();
-            // setPasswordError(true)
-            errorMessageEnterPassword.current.style.display = 'block';
-            errorMessageIncorrectPassword.current.style.display = 'none';
-            errorMessageTooManyRequests.current.style.display = 'none';
-            console.log("No password provided")
-            return;
-        }
+            if(!email) {
+                setPasswordError(false);
+                return;
+            }
+            else {
+                setPasswordError(true);
+                setErrorMsgPassword("Please provide a password.");
+                console.log("No password provided");
+                return;
+            };
+        };
 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -80,41 +68,31 @@ const SignIn: React.FC = () =>  {
                 signInUserFetch(user_token, userUID, display_name, userEmail);
             }
             else {
-                console.log('No user token')
+                console.log('No user token');
             }
-
         }
         catch (error: any) {
             switch (error.code) {
                 case 'auth/invalid-email':
-                    // setEmailError(true)
-                    emailBorder.current.style.border = 'red solid';
-                    emailBorder.current.focus();
-                    errorMessageNotRegistered.current.style.display = 'block';
-                    console.log("Email not registered");
+                    setEmailError(true);
+                    setErrorMsgEmail("Email not registered.");
+                    console.log("Email invalid");
                     break;
                 case 'auth/user-not-found':
-                    // setEmailError(true)
-                    emailBorder.current.style.border = 'red solid';
-                    emailBorder.current.focus();
-                    errorMessageNotRegistered.current.style.display = 'block';
+                    setEmailError(true);
+                    setErrorMsgEmail(" Email not registered.");
+                    setErrorMsgPassword(null);
                     console.log("Email not registered");
                     break;
                 case 'auth/wrong-password':
-                    passwordBorder.current.style.border = 'red solid';
-                    passwordBorder.current.focus();
-                    // setPasswordError(true)
-                    errorMessageIncorrectPassword.current.style.display = 'block';
-                    errorMessageTooManyRequests.current.style.display = 'none';
+                    setPasswordError(true);
+                    setErrorMsgPassword("Incorrect password.");
                     console.log("Password incorrect");
                     break;
                 case 'auth/too-many-requests':
-                    passwordBorder.current.style.border = 'red solid';
-                    // setPasswordError(true)
-                    // setEmailError(true)
-                    emailBorder.current.style.border = 'red solid';
-                    errorMessageTooManyRequests.current.style.display = 'block';
-                    errorMessageIncorrectPassword.current.style.display = 'none';
+                    setPasswordError(true);
+                    setEmailError(true);
+                    setErrorMsgPassword("Too many requests. Try again later.");
                     console.log("Too many requests");
                     break;
                 default:
@@ -122,120 +100,75 @@ const SignIn: React.FC = () =>  {
             };
         };
     };
-    
+
+
     return (
-        <>    
+        <> 
+        {forgotPassword ? (
+            <>
+            <BackArrow onClick={() => setForgotPassword(false)} />
+            <ForgotPassword></ForgotPassword>
+            </>
+        )
+        :
+        (
+            <>
+            <FirebaseAuthContainer>
+                <FirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseAuth} />
+            </FirebaseAuthContainer>
 
-        <FirebaseAuthContainer>
-            <FirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseAuth} />
-        </FirebaseAuthContainer>
+            <OrLine></OrLine>
 
-        <OrLine></OrLine>
-
-        <InputContainer  className="form-floating mb-3">
-            <Input type="email" 
-                className="form-control" 
-                id="floatingInput" 
-                placeholder="name@example.com"
-                name="email"
-                value={email}
+            <FloatingInput 
+                $error={emailError}
                 onChange={(e) => setEmail(e.target.value)}
-                ref={emailBorder} 
-                required>
-            </Input>
-        <Label htmlFor="floatingInput">Email<SpanAsterisk> &#42;</SpanAsterisk></Label>
-        
-        <ErrorMessage ref={errorMessageInvalidEmail}>Please provide a valid email.</ErrorMessage>
-        <ErrorMessage ref={errorMessageNotRegistered}>Email not registered.</ErrorMessage>
+                ref={emailBorder}
+                title="Email"
+                type="email"
+                value={email} />
 
-        </InputContainer>
-        <InputContainer className="form-floating mb-3">
-            <Input type="password" 
-                className="form-control" 
-                id="floatingPassword" 
-                placeholder="Password"
-                name="password"
-                value={password}
+            {errorMsgEmail && (
+                <ErrorMessage>{errorMsgEmail}</ErrorMessage>
+            )}
+
+            <FloatingInput 
+                $error={passwordError}
                 onChange={(e) => setPassword(e.target.value)}
-                ref={passwordBorder} 
-                required>
-            </Input>
-            <Label htmlFor="floatingPassword">Password<SpanAsterisk> &#42;</SpanAsterisk></Label>
-      
-            <ErrorMessage ref={errorMessageEnterPassword}>Please provide a password.</ErrorMessage>
-            <ErrorMessage ref={errorMessageIncorrectPassword}>Incorrect password.</ErrorMessage>
-            <ErrorMessage ref={errorMessageTooManyRequests}>Too many requests. Try again later.</ErrorMessage>
+                ref={passwordBorder}
+                title="Password"
+                type="password"
+                value={password} />
 
-        </InputContainer>
+            {errorMsgPassword && (
+                <ErrorMessage>{errorMsgPassword}</ErrorMessage>
+            )}
 
-
-        {/* <FloatingInput 
-            hasError={emailError} 
-            onChange={(e) => setEmail(e.target.value)}
-            ref={emailBorder}
-            title="Email"
-            type="email"
-            value={email} />
-
-        <ErrorMessage ref={errorMessageInvalidEmail}>Please provide a valid email.</ErrorMessage>
-        <ErrorMessage ref={errorMessageNotRegistered}>Email not registered.</ErrorMessage>
-
-        <FloatingInput 
-            hasError={passwordError}
-            onChange={(e) => setPassword(e.target.value)}
-            ref={passwordBorder}
-            title="Password"
-            type="password"
-            value={password} />
-
-        <ErrorMessage ref={errorMessageEnterPassword}>Please provide a password.</ErrorMessage>
-        <ErrorMessage ref={errorMessageIncorrectPassword}>Incorrect password.</ErrorMessage>
-        <ErrorMessage ref={errorMessageTooManyRequests}>Too many requests. Try again later.</ErrorMessage> */}
-
-        <BigButton title="Sign In" onClick={onSubmit} />
-        
-        <ResetPassword>Forgot password?</ResetPassword>
+            <BigButton title="Sign In" onClick={onSubmit} />
+            
+            <ForgotPasswordLink onClick={() => setForgotPassword(true)}>Forgot password?</ForgotPasswordLink>
+            </>
+        )}
         </> 
     );
 };
 
 
-const ResetPassword = styled.p`
-    padding: 30px 0 0 55px;
+const ForgotPasswordLink = styled.p`
+    padding: 25px 0 0 60px;
     font-size: 12px;
     width: 50%;
+    cursor: pointer;
+    &:hover {
+        color: #001e80;
+    }
 `;
 
 const ErrorMessage = styled.p`
     font-size: 12px;
     font-family: sans-serif;
-    display: none;
     color: red;
-    padding: 5px 0 0 5px;
+    padding: 5px 0 0 65px;
 `;
-
-const InputContainer = styled.div`
-    margin: auto;
-    width: 300px;
-`;
-
-const Label = styled.label`
-  margin-top:2px;
-  color: gray;
-  font-size: 14px;
-  font-family: system-ui, 'Segoe UI','Open Sans', 'Helvetica Neue', sans-serif;
-`;
-
-const Input = styled.input`
-  &:focus {
-    box-shadow: rgb(116, 116, 116) 0 0 7px 1px !important;
-    border: none;
-  }
-`;
-
-const SpanAsterisk = styled.span`
-  color: #a50016;
-;`
 
 const FirebaseAuthContainer = styled.section`
     margin-top: 50px;
