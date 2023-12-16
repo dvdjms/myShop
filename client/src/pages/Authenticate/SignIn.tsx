@@ -1,12 +1,12 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { auth, signInWithEmailAndPassword, uiConfig } from '../config/Firebase';
-import FirebaseAuth from '../config/FirebaseAuth';
+import { auth, signInWithEmailAndPassword, uiConfig } from '../../config/Firebase';
+import FirebaseAuth from '../../config/FirebaseAuth';
 import styled from "styled-components";
-import { OrLine } from '../components/OrLine';
-import { signInUserFetch } from '../services/api';
-import { BigButton } from '../components/BigButton';
-import { BackArrow } from '../components/BackArrow';
-import { FloatingInput } from '../components/FloatingInput';
+import { OrLine } from '../../components/OrLine';
+import { signInUserFetch } from '../../services/api';
+import { BigButton } from '../../components/BigButton';
+import { BackArrow } from '../../components/BackArrow';
+import { FloatingInput } from '../../components/FloatingInput';
 import ForgotPassword from './ForgotPassword';
 
 

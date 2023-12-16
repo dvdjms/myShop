@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { uiConfig, auth, db, doc, setDoc,
     createUserWithEmailAndPassword, updateProfile, 
-    fetchSignInMethodsForEmail } from "../config/Firebase";
-import FirebaseAuth from '../config/FirebaseAuth';
-import { signInUserFetch } from '../services/api';
+    fetchSignInMethodsForEmail } from "../../config/Firebase";
+import FirebaseAuth from '../../config/FirebaseAuth';
+import { signInUserFetch } from '../../services/api';
 import styled from "styled-components";
-import { OrLine } from '../components/OrLine';
-import { BigButton } from '../components/BigButton';
-import { FloatingInput } from '../components/FloatingInput';
-import { BackArrow } from '../components/BackArrow';
+import { OrLine } from '../../components/OrLine';
+import { BigButton } from '../../components/BigButton';
+import { FloatingInput } from '../../components/FloatingInput';
+import { BackArrow } from '../../components/BackArrow';
 
 const SignUp: React.FC = () =>  {
     const firebaseAuth = auth;
