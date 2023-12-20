@@ -12,11 +12,11 @@ import { BackArrow } from '../../components/BackArrow';
 
 const SignUp: React.FC = () =>  {
     const firebaseAuth = auth;
-    const [registerPageOne, setRegisterPageOne] = useState<boolean>(false)
+    const [registerPageOne, setRegisterPageOne] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('')
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
 
     const [errorMsgEmail, setErrorMsgEmail] = useState<string | null>(null);
     const [errorMsgUsername, setErrorMsgUsername] = useState<string | null>(null);

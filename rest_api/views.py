@@ -8,11 +8,11 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
-from rest_api.serializers import UserSerializer, GroupSerializer, ProductSerializer, CustomUserSerializer
+from rest_api.serializers import UserSerializer, GroupSerializer, ProductSerializer, CustomUserSerializer, ImageSerializer
 from rest_api.authentication import FirebaseAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Product, CustomUser
+from .models import Product, CustomUser, Image
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -47,8 +47,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         return JsonResponse({"data": "user token is invalid"})
 
 
-
-
 class CurrentUserView(APIView):
     authentication_classes = [FirebaseAuthentication]
     permission_classes = [IsAuthenticated]
@@ -70,11 +68,43 @@ class ProductView(generics.ListAPIView):
         return Product.objects.all().order_by('id')
     
 
+class ImageView(generics.ListAPIView):
+    serializer_class = ImageSerializer
+
+    def get_queryset(self):
+        results = Image.objects.select_related('user', 'product').all().order_by('id')
+        return results
+    
+    
+    # def get_by_uid(self, request):
+    #     firebaseUID = request.user.firebase_uid
+    #     return Image.objects.filter(firebase_uid=firebaseUID)
+
+
+##############################################################################
+# Product Table:
+# - ProductID (Primary Key)
+# - Name
+# - Description
+# - Price
+# - Category
+# - Manufacturer
+# - Other relevant fields...
+
+# Image Table:
+# - ImageID (Primary Key)
+# - ProductID (Foreign Key referencing Product table)
+# - ImagePath
+# - Caption
+# - Other image-related fields...
+##############################################################################
+    
+
+    
+
 
 def signUp(request):
     return render(request, 'Login.html')
-
-
 
 
 

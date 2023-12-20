@@ -19,8 +19,10 @@ from django.urls import include, path
 from django.contrib import admin
 # from rest_framework import routers
 from rest_api import views
-from rest_api.views import ProductView, CustomUserViewSet, CurrentUserView
+from rest_api.views import ProductView, CustomUserViewSet, CurrentUserView, ImageView
 from rest_framework import routers
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register(r'users', CustomUserViewSet, basename='user')
@@ -30,7 +32,10 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/products/', ProductView.as_view(), name = 'products'),
-    path('products/', ProductView.as_view(), name='products'),
-    path('current-user/', CurrentUserView.as_view(), name='current_user')
-]
+    # path('products/', ProductView.as_view(), name='products'),
+    path('current-user/', CurrentUserView.as_view(), name='current_user'),
+    path('api/images/', ImageView.as_view(), name='images'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 

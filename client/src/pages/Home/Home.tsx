@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { auth  } from '../../config/Firebase';
+import { auth } from '../../config/Firebase';
 import styled from 'styled-components';
 import { useAuth } from '../../contexts/AuthContext';
+import { Image } from '../../components/Image';
+
 
 const Home = () => {
     const { isAuthenticated } = useAuth();
     const [products, setProducts] = useState<string[]>([]);
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
+
 
     const getData = () => {
         auth.onAuthStateChanged(async (user) => {
@@ -24,6 +28,18 @@ const Home = () => {
             };
         });
     };
+
+    const getImages = async () => {
+        fetch('http://127.0.0.1:8000/api/images/', {
+            method: "GET",
+        }).then(response => response.json())
+        .then((JsonResponse) => {
+            let data = JsonResponse.results;
+            const paths = data.map((item: { path: any; }) => item.path)
+            setImageUrls(paths);
+        } ).catch(error => console.error('error', error))
+        };
+  
 
    
     return (
@@ -51,6 +67,19 @@ const Home = () => {
 
         </div>
 
+        <div>
+
+        <button onClick={getImages}>Get data</button>
+       
+                <div>
+                {imageUrls.map((imageUrl: any, index) => 
+                     <Image key={index} src={imageUrl} alt={`image ${index}`}/>
+                )}
+                </div>
+
+        </div>
+
+        
         </HomePage>
     )
 }
@@ -63,3 +92,4 @@ const HomePage = styled.main`
 `;
 
 export default Home;
+
