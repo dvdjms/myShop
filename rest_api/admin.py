@@ -13,7 +13,7 @@ class ProductAdmin(admin.ModelAdmin):
     
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('path', 'user', 'product')
+    list_display = ('image_url', 'description', 'user', 'product')
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)

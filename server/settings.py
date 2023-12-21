@@ -152,5 +152,5 @@ REST_FRAMEWORK = {
 FIREBASE_CONFIG = os.path.join(BASE_DIR, 'firebase-config.json')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'rest_api/media'
 

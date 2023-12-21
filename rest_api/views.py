@@ -60,7 +60,6 @@ class CurrentUserView(APIView):
             return Response({"detail": "User not found."}, status=404)
 
 
-
 class ProductView(generics.ListAPIView):
     serializer_class = ProductSerializer
 
@@ -105,8 +104,6 @@ class ImageView(generics.ListAPIView):
 
 def signUp(request):
     return render(request, 'Login.html')
-
-
 
 
 def getUser(request):

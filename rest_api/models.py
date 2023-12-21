@@ -38,7 +38,8 @@ class Product(models.Model):
 
 
 class Image(models.Model):
-    path = models.ImageField(max_length=255, blank=False)
+    image_url = models.ImageField(upload_to='uploads', max_length=255)
+    description = models.TextField(max_length=255, blank=False, default="")
     created_at = models.DateTimeField(auto_now_add = True, null = True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
