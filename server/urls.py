@@ -26,6 +26,7 @@ from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register(r'users', CustomUserViewSet, basename='user')
+# router.register(r'images', ImageView, basename='image')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

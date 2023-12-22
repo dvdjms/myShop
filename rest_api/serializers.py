@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from requests import request
 from rest_framework import serializers
 from .models import Product, CustomUser, Image
 
@@ -21,12 +22,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'category', 'price', 'created_at', 'user')
+        fields = ('id', 'name', 'description', 'category', 'price', 'created_at', 'firebase_uid')
 
 class ImageSerializer(serializers.ModelSerializer):
-    user = CustomUserSerializer()
-
     class Meta:
         model = Image
-        fields = ('id', 'image_url', 'description', 'created_at', 'user', 'product')
+        fields = ('id', 'image_url', 'description', 'created_at', 'firebase_uid', 'product_id')
+
 

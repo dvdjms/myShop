@@ -5,15 +5,15 @@ from .models import Product, CustomUser, Image
 
 
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'firebase_uid')
+    list_display = ('id', 'username', 'email', 'firebase_uid')
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'category', 'price', 'user')
+    list_display = ('name', 'description', 'category', 'price', 'firebase_uid')
     
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('image_url', 'description', 'user', 'product')
+    list_display = ('image_url', 'description', 'firebase_uid', 'product_id')
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)

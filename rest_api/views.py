@@ -1,6 +1,6 @@
 from rest_framework import generics
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render
-
 # Create your views here.
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -67,39 +67,41 @@ class ProductView(generics.ListAPIView):
         return Product.objects.all().order_by('id')
     
 
-class ImageView(generics.ListAPIView):
+class ImageView(generics.ListCreateAPIView):
     serializer_class = ImageSerializer
-
+    parser_classes = [MultiPartParser, FormParser]
+    authentication_classes = [FirebaseAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
     def get_queryset(self):
-        results = Image.objects.select_related('user', 'product').all().order_by('id')
-        return results
-    
-    
-    # def get_by_uid(self, request):
-    #     firebaseUID = request.user.firebase_uid
-    #     return Image.objects.filter(firebase_uid=firebaseUID)
+        print('reached the get function')
+        if self.request.method == 'GET':
+            results = Image.objects.select_related('user', 'product').all().order_by('id')
+            return results
+        return Image.objects.none()
 
 
-##############################################################################
-# Product Table:
-# - ProductID (Primary Key)
-# - Name
-# - Description
-# - Price
-# - Category
-# - Manufacturer
-# - Other relevant fields...
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                image_data = request.data['file']
+                description = request.data['description']
+                product_id = 2
+                serializer = ImageSerializer(data={
+                    'image_url': image_data,
+                    'description': description,
+                    'product_id': product_id,
+                    'firebase_uid': request.user.firebase_uid,
+                })
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status="201")
+                error_message = str(serializer.errors)
+                return Response({'error': error_message}, status="403")
+        return Response("Not authenticated")    
+                  
 
-# Image Table:
-# - ImageID (Primary Key)
-# - ProductID (Foreign Key referencing Product table)
-# - ImagePath
-# - Caption
-# - Other image-related fields...
-##############################################################################
-    
-
-    
 
 
 def signUp(request):
