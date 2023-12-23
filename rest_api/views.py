@@ -70,17 +70,12 @@ class ProductView(generics.ListAPIView):
 class ImageView(generics.ListCreateAPIView):
     serializer_class = ImageSerializer
     parser_classes = [MultiPartParser, FormParser]
-    authentication_classes = [FirebaseAuthentication]
-    # permission_classes = [IsAuthenticated]
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+
     def get_queryset(self):
-        print('reached the get function')
         if self.request.method == 'GET':
-            results = Image.objects.select_related('user', 'product').all().order_by('id')
+            results = Image.objects.select_related('firebase_uid', 'product').all().order_by('id')
             return results
         return Image.objects.none()
-
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -96,25 +91,32 @@ class ImageView(generics.ListCreateAPIView):
                 })
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data, status="201")
+                    response_data = {
+                        'message': 'Posted successfully',
+                        'data': serializer.data
+                    }
+                    return Response(response_data, status="201")
                 error_message = str(serializer.errors)
                 return Response({'error': error_message}, status="403")
-        return Response("Not authenticated")    
+            return Response("Not authenticated")    
                   
+    def get_authenticators(self):
+        if self.request.method == 'GET':
+            return []  # No authentication for GET requests
+        else:
+            return [FirebaseAuthentication()] 
 
 
+# def signUp(request):
+#     return render(request, 'Login.html')
 
-def signUp(request):
-    return render(request, 'Login.html')
 
-
-def getUser(request):
-    products = User.objects.all()
-
-    try:
-        products = Product.objects.all()
-        response_object = {"data": serialize("json", products)}
-    except ValueError as e:
-        return JsonResponse({"data": f"Invalid user token: {str(e)}"})
-    return JsonResponse(response_object)
+# def getUser(request):
+#     products = User.objects.all()
+#     try:
+#         products = Product.objects.all()
+#         response_object = {"data": serialize("json", products)}
+#     except ValueError as e:
+#         return JsonResponse({"data": f"Invalid user token: {str(e)}"})
+#     return JsonResponse(response_object)
 

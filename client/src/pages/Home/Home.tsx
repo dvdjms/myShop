@@ -31,40 +31,42 @@ const Home = () => {
 
    
     return (
-        <HomePage>
-            <div>
+        <>
 
-        <h3>Home</h3>
+            <Header>
+                <h3>Home</h3>
+                <button onClick={getData}>Get data</button>
+            </Header>
+            <HomePage>
 
-            </div>
- 
-        <div>
-        <button onClick={getData}>Get data</button>
+                {isAuthenticated ? (
+                    <ul>
+                    {products.map((product: any, index) => {
+                    
+                        return <li key={index}>{product.product} {product.price}</li>;
+                    })}
+                    </ul>
+                    ) : (
+                       <></>
+                    )}
 
-            {isAuthenticated ? (
-       
-                <ul>
-                {products.map((product: any, index) => {
-                
-                    return <li key={index}>{product.product} {product.price}</li>;
-                })}
-                </ul>
-                ) : (
-                    <p></p>
-                )}
+            <ImageContainer />
 
-        </div>
-        <ImageContainer />
-        
-        </HomePage>
+            </HomePage>
+        </>
     )
 }
  
+const Header = styled.header`
+    padding: 70px 0 10px 70px;
+`
 
 
 const HomePage = styled.main`
-    height: 100vh;
-    padding: 70px 0 0 40px;
+    padding-left: 70px;
+    height: fit-content;
+    min-height: 110vh;
+    position: relative;
 `;
 
 export default Home;

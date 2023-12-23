@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Image } from '../components/Image';
-import { getImages } from '../services/api';
-import { auth } from '../config/Firebase';
-// import { uploadImage } from '../services/api';
-
+import { getImages, uploadImage } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 
 const ImageContainer = () => {
     const [imageUrls, setImageUrls] = useState<string[]>([]);
     const [file, setFile] = useState<File | null>(null);
     const [description, setDescription] = useState<string | null>('');
+    const { isAuthenticated } = useAuth();
 
+    useEffect(() => {
+        fetchImages();
+    },[])
 
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDescription(e.target.value);
-    };
-
-
-    const handleImages = async () => {
+    const fetchImages = async () => {
         try {
             const results = await getImages();
             setImageUrls(results);
@@ -26,7 +23,6 @@ const ImageContainer = () => {
         };
     };
 
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFile(e.target.files[0])
@@ -34,51 +30,34 @@ const ImageContainer = () => {
     };
 
     const handleUpload = async () => {
-        const user = auth.currentUser || '';
-        if(!user){
-            return "not signed in";
-        }
-        const token = await user.getIdToken();
         if (file) {
-            console.log("Uploading file...");
             const formData = new FormData();
             formData.append("file", file);
             formData.append("description", description ?? '');
-            const url = 'http://127.0.0.1:8000/api/images/';
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                    },
-                    body: formData
-                })
-                const data = await response.json();
-                console.log("data", data);
-
-            } catch (error) {
-                console.error('Error uploading image', error);
-                throw error;
-            };
+            await uploadImage(formData);
+            fetchImages();
         };
     };
 
 
     return (
         <>
-        <Button onClick={handleImages}>Get data</Button>
-        <ImageUploadContainer>
+        {isAuthenticated ? 
+        (
+        <FormContainer>
             <input onChange={handleFileChange} type="file" id="file" name="img" accept="image/*"></input>
-            <input onChange={handleDescriptionChange} type="text" name="description"/>
+            <input onChange={(e) => setDescription(e.target.value)} type="text" name="description"/>
             <button onClick={handleUpload} type="button">Submit image</button>
-        </ImageUploadContainer>
-
-
+        </FormContainer>
+        ) : ( <></> )
+        }
 
         <ImageContainerMain>
             <GalleryItem>
                 {imageUrls.map((imageUrl: any, index) => 
-                        <Image key={index} src={imageUrl.url} alt={`image ${imageUrl.description}`}/>
+                    <a key={index} href={imageUrl.url}>
+                        <Image src={imageUrl.url} alt={`image ${imageUrl.description}`} />
+                    </a>
                 )}
             </GalleryItem>
         </ImageContainerMain>
@@ -86,23 +65,22 @@ const ImageContainer = () => {
     )
 
 };
-const ImageUploadContainer = styled.form`
+
+
+const FormContainer = styled.form`
     height: 70px;
-`
+`;
 const ImageContainerMain = styled.main`
-    display: grid;
-    width: 80%;
-    border: red solid;
+    height: fit-content;
+    margin: auto;
+    width: 77%;
 `;
 
 const GalleryItem = styled.div`
-
-
+    border: red solid;
+    height: 100vh;
 `;
 
-const Button = styled.button`
-    width: 85px;
-`;
 
 
 export default ImageContainer;

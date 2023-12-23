@@ -15,7 +15,6 @@ const App: React.FC = () => {
 
 
     return (
-        // <div className="App">
         <AuthProvider>
         <UserProvider>
         <ModalProvider>
@@ -32,7 +31,6 @@ const App: React.FC = () => {
         </ModalProvider>
         </UserProvider>
         </AuthProvider>
-        // </div>
       );
 }
 

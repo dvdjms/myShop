@@ -3,7 +3,6 @@ import { auth } from '../config/Firebase';
 
 // Post new user
 export const signInUserFetch = async (user_token: string, userUID: string, displayName: string, email: string) => {
- 
     const url = 'http://127.0.0.1:8000/api/users/';
     try {
         const response = await fetch(url, {
@@ -54,13 +53,10 @@ export const getUserDetails = async (): Promise<string | undefined> => {
 
 // get all images
 export const getImages = async () => {
-
     const url = 'http://127.0.0.1:8000/api/images/';
-
     try {
         const response = await fetch(url, {
             method: "GET",
-
         });
         const data = await response.json();
         return data.results.map((item: { image_url: any; description: any}) => ({
@@ -74,18 +70,28 @@ export const getImages = async () => {
 };
 
 // upload image
-// export const uploadImage = async (formData) => {
-    
-//     const url = 'http://127.0.0.1:8000/api/images/upload/';
-//     try {
-//         const response = await fetch(url, {
-//             method: "POST",
-//             body: formData,
-//         })
-//         return response;
-
-//     } catch (error) {
-//         console.error('Error uploading image', error);
-//         throw error;
-//     };
-// };
+export const uploadImage = async (formData: FormData) => {
+    const user = auth.currentUser || '';
+    if(!user){
+        return "not signed in";
+    }
+    const token = await user.getIdToken();
+    if (formData) {
+        console.log("Uploading file...");
+        const url = 'http://127.0.0.1:8000/api/images/';
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: formData,
+            })
+            const data = await response.json();
+            console.log(data.message);
+        } catch (error) {
+            console.error('Error uploading image', error);
+            throw error;
+        };
+    };
+};

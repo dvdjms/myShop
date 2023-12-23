@@ -21,4 +21,6 @@ export const Image = (props: Props) => {
 const Img = styled.img`
     height: 150px;
     width: 100px;  
+    float: left;
+    margin: 5px;
 `;
