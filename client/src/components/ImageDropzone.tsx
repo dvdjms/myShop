@@ -16,7 +16,7 @@ export const ImageDropzone = (props: Props) => {
             try {
                 const formData = new FormData();
                 formData.append("file", acceptedFiles[0]);
-                formData.append("description", "this");
+                formData.append("description", "Image description");
                 await uploadImage(formData);
                 props.fetchImages();
             }
@@ -83,6 +83,5 @@ const DropContainer = styled.section`
     position: relative;
     border: #e1bb75 solid;
     border-radius: 10px;
-
     cursor: pointer;
 `;
