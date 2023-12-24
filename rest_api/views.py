@@ -80,6 +80,7 @@ class ImageView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.method == 'POST':
+                # check image size
                 image_data = request.data['file']
                 description = request.data['description']
                 product_id = 2
