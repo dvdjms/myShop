@@ -3,12 +3,14 @@ import styled from 'styled-components';
 import { Image } from '../components/Image';
 import { getImages, uploadImage } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { ImageDropzone } from '../components/ImageDropzone';
+// import Dropzone from 'react-dropzone';
 
 const ImageContainer = () => {
     const [imageUrls, setImageUrls] = useState<string[]>([]);
     const [file, setFile] = useState<File | null>(null);
     const [description, setDescription] = useState<string | null>('');
-    const { isAuthenticated } = useAuth();
+    const {isAuthenticated} = useAuth();
 
     useEffect(() => {
         fetchImages();
@@ -18,7 +20,7 @@ const ImageContainer = () => {
         try {
             const results = await getImages();
             setImageUrls(results);
-        }catch (error){
+        } catch (error){
             console.error('Error fetching data', error);
         };
     };
@@ -35,6 +37,7 @@ const ImageContainer = () => {
             formData.append("file", file);
             formData.append("description", description ?? '');
             await uploadImage(formData);
+            console.log('This', formData)
             fetchImages();
         };
     };
@@ -43,12 +46,27 @@ const ImageContainer = () => {
     return (
         <>
         {isAuthenticated ? 
-        (
+        (<>
+        <ImageDropzone fetchImages={fetchImages}/>
+        {/* <p>hello</p>
+        <Dropzone onDrop={acceptedFiles => console.log("print this", acceptedFiles)}>
+            {({getRootProps, getInputProps}) => (
+                <section>
+                <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <p>hkjDrag 'n' drop somefiles here, or click to select files</p>
+                    <DropBox></DropBox>
+                </div>
+                </section>
+            )}
+        </Dropzone> */}
+
         <FormContainer>
             <input onChange={handleFileChange} type="file" id="file" name="img" accept="image/*"></input>
             <input onChange={(e) => setDescription(e.target.value)} type="text" name="description"/>
             <button onClick={handleUpload} type="button">Submit image</button>
         </FormContainer>
+        </>
         ) : ( <></> )
         }
 
@@ -70,6 +88,7 @@ const ImageContainer = () => {
 const FormContainer = styled.form`
     height: 70px;
 `;
+
 const ImageContainerMain = styled.main`
     height: fit-content;
     margin: auto;
@@ -81,6 +100,11 @@ const GalleryItem = styled.div`
     height: 100vh;
 `;
 
+// const DropBox = styled.div`
+//     height: 100px;
+//     width: 100px;
+//     border: #ff0000 solid;
 
+// `;
 
 export default ImageContainer;

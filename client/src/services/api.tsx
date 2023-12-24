@@ -71,6 +71,7 @@ export const getImages = async () => {
 
 // upload image
 export const uploadImage = async (formData: FormData) => {
+    console.log("formData", formData)
     const user = auth.currentUser || '';
     if(!user){
         return "not signed in";
@@ -88,7 +89,7 @@ export const uploadImage = async (formData: FormData) => {
                 body: formData,
             })
             const data = await response.json();
-            console.log(data.message);
+            console.log("Api message", data.message);
         } catch (error) {
             console.error('Error uploading image', error);
             throw error;
