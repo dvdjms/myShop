@@ -60,7 +60,6 @@ const ImageContainer = () => {
                 </section>
             )}
         </Dropzone> */}
-
         <FormContainer>
             <input onChange={handleFileChange} type="file" id="file" name="img" accept="image/*"></input>
             <input onChange={(e) => setDescription(e.target.value)} type="text" name="description"/>
