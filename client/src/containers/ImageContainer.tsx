@@ -48,18 +48,8 @@ const ImageContainer = () => {
         {isAuthenticated ? 
         (<>
         <ImageDropzone fetchImages={fetchImages}/>
-        {/* <p>hello</p>
-        <Dropzone onDrop={acceptedFiles => console.log("print this", acceptedFiles)}>
-            {({getRootProps, getInputProps}) => (
-                <section>
-                <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <p>hkjDrag 'n' drop somefiles here, or click to select files</p>
-                    <DropBox></DropBox>
-                </div>
-                </section>
-            )}
-        </Dropzone> */}
+ 
+
         <FormContainer>
             <input onChange={handleFileChange} type="file" id="file" name="img" accept="image/*"></input>
             <input onChange={(e) => setDescription(e.target.value)} type="text" name="description"/>

@@ -9,6 +9,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { UserProvider } from './contexts/UserContext';
 import { ModalProvider } from './contexts/ModalContext';
 import SignInModal from './containers/ModalContainer';
+import MyProducts from './pages/MyProducts/MyProducts';
 
 
 const App: React.FC = () => {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/profile" element={<Profile />} />
+                    <Route path="/myproducts" element={<MyProducts />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
                 <Footer />

@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react';
-import {useDropzone} from 'react-dropzone';
+import React, { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import styled from "styled-components";
 import { uploadImage } from '../services/api';
 import upload_logo from '../assets/upload.png'
@@ -13,17 +13,22 @@ export const ImageDropzone = (props: Props) => {
 
     const onDrop = useCallback(async (acceptedFiles: any) => {
         if (acceptedFiles) {
-            console.log('accepted file', acceptedFiles)
-            try {
-                const formData = new FormData();
-                formData.append("file", acceptedFiles[0]);
-                formData.append("description", "Image description");
-                await uploadImage(formData);
-                props.fetchImages();
+            if (acceptedFiles[0].size > 524288) {
+                return console.log("File too large")
             }
-            catch (error){
-                console.log("Error", error)
-            }
+            else {
+                console.log('accepted file', acceptedFiles[0].size)
+                try {
+                    const formData = new FormData();
+                    formData.append("file", acceptedFiles[0]);
+                    formData.append("description", "Image description");
+                    await uploadImage(formData);
+                    props.fetchImages();
+                }
+                catch (error){
+                    console.log("Error", error)
+                }
+            };
         };
     },[props])
 
@@ -37,15 +42,15 @@ export const ImageDropzone = (props: Props) => {
                 isDragActive ?
                 <>
                 <DropBoxActive>
-                <Paragraph2>Drop the files here ...</Paragraph2>
-                <Logo src={upload_logo} alt="upload logo"/>
+                    <Paragraph2>Drop the files here ...</Paragraph2>
+                    <Logo src={upload_logo} alt="upload logo"/>
                 </DropBoxActive>
                 </>
                 :
                 <>
                 <DropBoxInactive>
-                <Paragraph1>Drag an image here, or click to upload a file</Paragraph1> 
-                <Logo src={drag_logo} alt="drag logo"/>
+                    <Paragraph1>Drag an image here, or click to upload a file</Paragraph1> 
+                    <Logo src={drag_logo} alt="drag logo"/>
                 </DropBoxInactive>
                 </>
             }

@@ -8,6 +8,7 @@ import NavDropdown from 'react-bootstrap/navdropdown';
 import { useModal } from "../contexts/ModalContext";
 import { useUser } from '../contexts/UserContext';
 import { useAuth } from "../contexts/AuthContext";
+import { navlinks } from "../constants";
 
 
 const NavBar: React.FC = () => {
@@ -50,17 +51,14 @@ const NavBar: React.FC = () => {
                         <SignedStatus>Hello, {username}</SignedStatus>
                     )}
                     <NavDropdown title="Account" id="basic-nav-dropdown">
-                        <LinkContainer>
-                            <NavLink to="/profile">
-                                <Link>Profile</Link>
-                            </NavLink>
-                        </LinkContainer>
-                        <LinkContainer>
-                            <NavLink to="/settings">
-                                <Link>Settings</Link>
-                            </NavLink>
-                        </LinkContainer>
-                        <NavDropdown.Divider />
+                        {navlinks.map((link, index) => (
+                            <LinkContainer key={index}>
+                                <NavLink to={`/${link.id}`}>
+                                    <Link>{link.title}</Link>
+                                </NavLink>
+                            </LinkContainer>
+                        ))}
+                    <NavDropdown.Divider />
                         <LinkContainer>
                             <NavLink onClick={handleLogout} to="/">
                                 <Link>Sign out</Link>
@@ -99,7 +97,6 @@ const Link = styled.div`
     text-decoration: none;
     &:hover {
         color: #4a014a;
-
     }
     &:active {
         color: #730273;

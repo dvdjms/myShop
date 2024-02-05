@@ -77,6 +77,20 @@ class ImageView(generics.ListCreateAPIView):
             return results
         return Image.objects.none()
 
+    # def get_product_by_user(self, request)
+    #     if self.request.method == 'GET':
+    #         results = Image.objects.get('id', request)
+    #         return results
+    #     return Image.objects.none()
+
+    # def get_product(self, request)
+    #     if self.request.method == 'GET':
+    #         results = Image.objects.get('id', request)
+    #         return results
+    #     return Image.objects.none()
+
+
+
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.method == 'POST':
