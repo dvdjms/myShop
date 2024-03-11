@@ -13,6 +13,7 @@ from rest_api.authentication import FirebaseAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Product, CustomUser, Image
+from django.views.generic import DeleteView
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -67,7 +68,7 @@ class ProductView(generics.ListAPIView):
         return Product.objects.all().order_by('id')
     
 
-class ImageView(generics.ListCreateAPIView):
+class ImageView(generics.ListCreateAPIView, DeleteView):
     serializer_class = ImageSerializer
     parser_classes = [MultiPartParser, FormParser]
 
@@ -76,6 +77,9 @@ class ImageView(generics.ListCreateAPIView):
             results = Image.objects.select_related('firebase_uid', 'product').all().order_by('id')
             return results
         return Image.objects.none()
+    
+
+
 
     # def get_product_by_user(self, request)
     #     if self.request.method == 'GET':
@@ -114,6 +118,18 @@ class ImageView(generics.ListCreateAPIView):
                 error_message = str(serializer.errors)
                 return Response({'error': error_message}, status="403")
             return Response("Not authenticated")    
+        
+
+    def delete(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.method == 'DELETE':
+                image_data = request.data['url']
+                results = Image.objects.get(image_url=image_data)
+                results.delete()
+                return Response("Image has been deleted")
+        return Response("Not authenticated")  
+
+
                   
     def get_authenticators(self):
         if self.request.method == 'GET':

@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+import os
 
 
 # Create your models here.
@@ -44,6 +47,7 @@ class Product(models.Model):
 def upload_to(instance, filename):
     return f'uploads/{filename}'
 
+
 class Image(models.Model):
     image_url = models.ImageField(upload_to=upload_to)
     description = models.TextField(max_length=255, blank=False, default="")
@@ -51,3 +55,9 @@ class Image(models.Model):
     firebase_uid = models.ForeignKey(CustomUser, on_delete=models.CASCADE, to_field='firebase_uid', related_name='images')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
 
+
+@receiver(post_delete, sender=Image)
+def delete_image_file(sender, instance, **kwargs):
+    if instance.image_url:
+        if os.path.isfile(instance.image_url.path):
+            os.remove(instance.image_url.path)

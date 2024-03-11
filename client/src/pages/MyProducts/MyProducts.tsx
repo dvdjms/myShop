@@ -7,8 +7,6 @@ const MyProducts = () => {
 
 
 
-
-
     return (
         <Section>
             <>My Products</>

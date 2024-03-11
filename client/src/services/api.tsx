@@ -59,7 +59,7 @@ export const getImages = async () => {
             method: "GET",
         });
         const data = await response.json();
-        return data.results.map((item: { image_url: any; description: any}) => ({
+        return data.results.map((item: {image_url: any; description: any}) => ({
             url: item.image_url,
             description: item.description
         }));
@@ -94,5 +94,30 @@ export const uploadImage = async (formData: FormData) => {
             console.error('Error uploading image', error);
             throw error;
         };
+    };
+};
+
+// delete image
+export const deleteImage = async (formData: FormData) => {
+    const user = auth.currentUser || '';
+    if(!user){
+        return "not signed in";
+    }
+    const token = await user.getIdToken();
+
+    const url = 'http://127.0.0.1:8000/api/images/';
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+            body: formData,
+        })
+        const data = await response.json();
+        console.log("Api message:", data);
+    } catch (error) {
+        console.error('Error deleting image', error);
+        throw error;
     };
 };

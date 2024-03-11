@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Image } from '../components/Image';
-import { getImages, uploadImage } from '../services/api';
+import { getImages, uploadImage, deleteImage } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { ImageDropzone } from '../components/ImageDropzone';
 // import Dropzone from 'react-dropzone';
@@ -42,6 +42,14 @@ const ImageContainer = () => {
         };
     };
 
+    // this is not the correct method. Slicing the string is incorrect as string length may change
+    const popUpDelete = (image: String) => {
+        const images = image.slice(28)
+        const formDataDelete = new FormData
+        formDataDelete.append("url", images)
+        deleteImage(formDataDelete);
+    };
+
 
     return (
         <>
@@ -62,7 +70,7 @@ const ImageContainer = () => {
         <ImageContainerMain>
             <GalleryItem>
                 {imageUrls.map((imageUrl: any, index) => 
-                    <a key={index} href={imageUrl.url}>
+                    <a key={index} href={imageUrl.url} onContextMenu={(e) => popUpDelete(imageUrl.url)} >
                         <Image src={imageUrl.url} alt={`image ${imageUrl.description}`} />
                     </a>
                 )}

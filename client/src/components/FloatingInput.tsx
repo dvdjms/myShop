@@ -11,7 +11,7 @@ interface Props {
 
 export const FloatingInput = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
 
-    const { $error, onChange, title, type, value} = props;
+    const { $error, onChange, title, type, value } = props;
 
     return (
         <InputContainer className="form-floating mb-3">
