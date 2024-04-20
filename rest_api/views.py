@@ -68,7 +68,7 @@ class ProductView(generics.ListAPIView):
         return Product.objects.all().order_by('id')
     
 
-class ImageView(generics.ListCreateAPIView, DeleteView):
+class ImageView(generics.ListCreateAPIView):
     serializer_class = ImageSerializer
     parser_classes = [MultiPartParser, FormParser]
 
@@ -78,57 +78,46 @@ class ImageView(generics.ListCreateAPIView, DeleteView):
             return results
         return Image.objects.none()
     
-
-
-
-    # def get_product_by_user(self, request)
-    #     if self.request.method == 'GET':
-    #         results = Image.objects.get('id', request)
-    #         return results
-    #     return Image.objects.none()
-
-    # def get_product(self, request)
-    #     if self.request.method == 'GET':
-    #         results = Image.objects.get('id', request)
-    #         return results
-    #     return Image.objects.none()
-
-
-
     def post(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            if request.method == 'POST':
-                # check image size
-                image_data = request.data['file']
-                description = request.data['description']
-                product_id = 2
-                serializer = ImageSerializer(data={
-                    'image_url': image_data,
-                    'description': description,
-                    'product_id': product_id,
-                    'firebase_uid': request.user.firebase_uid,
-                })
-                if serializer.is_valid():
-                    serializer.save()
-                    response_data = {
-                        'message': 'Posted successfully',
-                        'data': serializer.data
-                    }
-                    return Response(response_data, status="201")
-                error_message = str(serializer.errors)
-                return Response({'error': error_message}, status="403")
-            return Response("Not authenticated")    
+        if request.method == 'POST':
+            # check image size
+            image_data = request.data['file']
+            description = request.data['description']
+            product_id = 2
+            serializer = ImageSerializer(data = {
+                'image_url': image_data,
+                'description': description,
+                'product_id': product_id,
+                'firebase_uid': request.user.firebase_uid,
+            })
+            if serializer.is_valid():
+                serializer.save()
+                response_data = {
+                    'message': 'Posted successfully',
+                    'data': serializer.data
+                }
+                return Response(response_data, status="201")
+            error_message = str(serializer.errors)
+            return Response({'error': error_message}, status="401")
+        return Response("Not authenticated") 
         
+    def get_authenticators(self):
+        if self.request.method == 'GET':
+            return []  # No authentication for GET requests
+        else:
+            return [FirebaseAuthentication()] 
+    
+
+class ImageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
 
     def delete(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            if request.method == 'DELETE':
-                image_data = request.data['url']
-                results = Image.objects.get(image_url=image_data)
-                results.delete()
-                return Response("Image has been deleted")
-        return Response("Not authenticated")  
-
+        instance = self.get_object()
+        if instance is None:
+            return Response({"error": "Image not found."}, status=404)
+        self.perform_destroy(instance)
+        return Response({"message": "Image deleted successfully."}, status=204)
 
                   
     def get_authenticators(self):

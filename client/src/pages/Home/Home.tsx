@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { auth } from '../../config/Firebase';
 import styled from 'styled-components';
 import { useAuth } from '../../contexts/AuthContext';
-import ImageContainer from '../../containers/ImageContainer';
 
 
 const Home = () => {
     const { isAuthenticated } = useAuth();
     const [products, setProducts] = useState<string[]>([]);
-
 
     const getData = () => {
         auth.onAuthStateChanged(async (user) => {
@@ -38,7 +36,6 @@ const Home = () => {
                 <button onClick={getData}>Get data</button>
             </Header>
             <HomePage>
-
                 {isAuthenticated ? (
                     <ul>
                     {products.map((product: any, index) => {
@@ -49,9 +46,6 @@ const Home = () => {
                     ) : (
                        <></>
                     )}
-
-            <ImageContainer />
-
             </HomePage>
         </>
     )

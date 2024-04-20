@@ -13,7 +13,7 @@ class ProductAdmin(admin.ModelAdmin):
     
 
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('image_url', 'description', 'firebase_uid', 'product_id')
+    list_display = ('id', 'image_url', 'description', 'firebase_uid', 'product_id')
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)

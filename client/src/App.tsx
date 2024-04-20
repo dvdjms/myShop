@@ -14,7 +14,6 @@ import MyProducts from './pages/MyProducts/MyProducts';
 
 const App: React.FC = () => {
 
-
     return (
         <AuthProvider>
         <UserProvider>

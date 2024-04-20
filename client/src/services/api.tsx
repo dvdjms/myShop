@@ -28,7 +28,6 @@ export const signInUserFetch = async (user_token: string, userUID: string, displ
 
 // get current user name
 export const getUserDetails = async (): Promise<string | undefined> => {
-
     const user = auth.currentUser || '';
     if(!user){
         return "not signed in";
@@ -59,19 +58,21 @@ export const getImages = async () => {
             method: "GET",
         });
         const data = await response.json();
-        return data.results.map((item: {image_url: any; description: any}) => ({
+        return data.results.map((item: {id: any; image_url: any; description: any}) => ({
+            id: item.id,
             url: item.image_url,
-            description: item.description
+            description: item.description,
         }));
+
     } catch (error) {
         console.error('Error fetching data', error);
         throw error;
     };
+
 };
 
 // upload image
 export const uploadImage = async (formData: FormData) => {
-    console.log("formData", formData)
     const user = auth.currentUser || '';
     if(!user){
         return "not signed in";
@@ -98,24 +99,28 @@ export const uploadImage = async (formData: FormData) => {
 };
 
 // delete image
-export const deleteImage = async (formData: FormData) => {
+export const deleteImage = async (ImageId: number) => {
     const user = auth.currentUser || '';
     if(!user){
         return "not signed in";
     }
     const token = await user.getIdToken();
 
-    const url = 'http://127.0.0.1:8000/api/images/';
+    const url = `http://127.0.0.1:8000/api/images/${ImageId}`;
     try {
         const response = await fetch(url, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
             },
-            body: formData,
         })
-        const data = await response.json();
-        console.log("Api message:", data);
+        // const data = await response.json();
+        // console.log(data);
+        if (response.ok) {
+            console.log(`Image with ID ${ImageId} deleted successfully.`);
+        } else {
+            console.error(`Failed to delete image with ID ${ImageId}.`);
+        }
     } catch (error) {
         console.error('Error deleting image', error);
         throw error;

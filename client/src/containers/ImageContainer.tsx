@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Image } from '../components/Image';
-import { getImages, uploadImage, deleteImage } from '../services/api';
+import { getImages, uploadImage } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { ImageDropzone } from '../components/ImageDropzone';
-// import Dropzone from 'react-dropzone';
+import { RightClickMenu } from '../components/RightClickMenu';
+
 
 const ImageContainer = () => {
     const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -12,9 +13,9 @@ const ImageContainer = () => {
     const [description, setDescription] = useState<string | null>('');
     const {isAuthenticated} = useAuth();
 
-    useEffect(() => {
-        fetchImages();
-    },[])
+    // useEffect(() => {
+    //     fetchImages();
+    // },[]);
 
     const fetchImages = async () => {
         try {
@@ -37,18 +38,56 @@ const ImageContainer = () => {
             formData.append("file", file);
             formData.append("description", description ?? '');
             await uploadImage(formData);
-            console.log('This', formData)
             fetchImages();
         };
     };
 
-    // this is not the correct method. Slicing the string is incorrect as string length may change
-    const popUpDelete = (image: String) => {
-        const images = image.slice(28)
-        const formDataDelete = new FormData
-        formDataDelete.append("url", images)
-        deleteImage(formDataDelete);
+    const [menuStates, setMenuStates] = useState<{[key: number]: { isVisible: boolean; position: { x: number; y: number } }}>({});
+    
+    const handleRightClick = (e: React.MouseEvent<HTMLImageElement>, image_id: number) => {
+        e.preventDefault();
+        const newPosition = { x: e.clientX + window.scrollX, y: e.clientY + window.scrollY};
+        setMenuStates(prevState => ({
+            ...Object.fromEntries(Object.entries(prevState).map(([key, value]) => [key, { isVisible: false, position: { x: 0, y: 0 } }])),
+            [image_id]: { isVisible: !prevState[image_id]?.isVisible, position: newPosition }
+        }));
     };
+    
+    
+    // eslint-disable-next-line
+    const handleMenuItemClick = (image_id: number) => {
+        setMenuStates(prevState => ({
+            ...prevState,
+            [image_id]: { isVisible: false, position: { x: 0, y: 0 } }
+        }))
+    };
+    useEffect(() => {
+        const handleClick = (event: MouseEvent) => {
+            const clickedElement = event.target as HTMLElement;
+            const isClickInsideMenu = clickedElement.closest('.menu');
+    
+            if (!isClickInsideMenu) {
+                setMenuStates(prevState => {
+                    const updatedMenuStates = {...prevState};
+                    for (const menuId in updatedMenuStates) {
+                        updatedMenuStates[menuId].isVisible = false;
+                    }
+                    return updatedMenuStates;
+                });
+            }
+        };
+    
+        window.addEventListener('click', handleClick);
+    
+        return () => {
+            window.removeEventListener('click', handleClick);
+        };
+    }, [menuStates]);
+
+    useEffect(() => {
+        fetchImages();
+
+    },[handleMenuItemClick]);
 
 
     return (
@@ -56,7 +95,6 @@ const ImageContainer = () => {
         {isAuthenticated ? 
         (<>
         <ImageDropzone fetchImages={fetchImages}/>
- 
 
         <FormContainer>
             <input onChange={handleFileChange} type="file" id="file" name="img" accept="image/*"></input>
@@ -70,9 +108,22 @@ const ImageContainer = () => {
         <ImageContainerMain>
             <GalleryItem>
                 {imageUrls.map((imageUrl: any, index) => 
-                    <a key={index} href={imageUrl.url} onContextMenu={(e) => popUpDelete(imageUrl.url)} >
-                        <Image src={imageUrl.url} alt={`image ${imageUrl.description}`} />
-                    </a>
+                    <div key={index}>
+                        <Image 
+                            src={imageUrl.url} 
+                            alt={`image ${imageUrl.description}`} 
+                            onRightClick={(e) => handleRightClick(e, imageUrl.id)}
+                        />
+                        {menuStates[imageUrl.id]?.isVisible && (
+                            <RightClickMenu 
+                                isVisible={menuStates[imageUrl.id].isVisible}
+                                position={menuStates[imageUrl.id].position} 
+                                onMenuItemClick={() => handleMenuItemClick(imageUrl.id)}
+                                image_id={imageUrl.id}
+                                imageUrl={imageUrl.url}
+                            />
+                        )}
+                    </div> 
                 )}
             </GalleryItem>
         </ImageContainerMain>
@@ -93,7 +144,7 @@ const ImageContainerMain = styled.main`
 `;
 
 const GalleryItem = styled.div`
-    border: red solid;
+    // border: red solid;
     height: 100vh;
 `;
 

@@ -1,19 +1,20 @@
 import React from 'react';
 import styled from "styled-components";
 
-
 interface Props {
     src: string;
     alt: string;
+    onRightClick: (e: React.MouseEvent<HTMLImageElement>) => void;
 }
 
 export const Image = (props: Props) => {
 
-    const {src, alt} = props;
+    const {src, alt, onRightClick} = props;
+
 
     return (
       <div>
-        <Img src={src} alt={alt} />
+        <Img src={src} alt={alt} onContextMenu={onRightClick}/>
       </div>
     )
 };
