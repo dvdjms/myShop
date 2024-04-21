@@ -73,33 +73,28 @@ class ImageView(generics.ListCreateAPIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
-        if self.request.method == 'GET':
-            results = Image.objects.select_related('firebase_uid', 'product').all().order_by('id')
-            return results
-        return Image.objects.none()
+        results = Image.objects.select_related('firebase_uid', 'product').all().order_by('id')
+        return results
     
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            # check image size
-            image_data = request.data['file']
-            description = request.data['description']
-            product_id = 2
-            serializer = ImageSerializer(data = {
-                'image_url': image_data,
-                'description': description,
-                'product_id': product_id,
-                'firebase_uid': request.user.firebase_uid,
-            })
-            if serializer.is_valid():
-                serializer.save()
-                response_data = {
-                    'message': 'Posted successfully',
-                    'data': serializer.data
-                }
-                return Response(response_data, status="201")
-            error_message = str(serializer.errors)
-            return Response({'error': error_message}, status="401")
-        return Response("Not authenticated") 
+        image_data = request.data['file']
+        description = request.data['description']
+        product_id = 2
+        serializer = ImageSerializer(data = {
+            'image_url': image_data,
+            'description': description,
+            'product_id': product_id,
+            'firebase_uid': request.user.firebase_uid,
+        })
+        if serializer.is_valid():
+            serializer.save()
+            response_data = {
+                'message': 'Posted successfully',
+                'data': serializer.data
+            }
+            return Response(response_data, status="201")
+        error_message = str(serializer.errors)
+        return Response({'error': error_message}, status="401")
         
     def get_authenticators(self):
         if self.request.method == 'GET':

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from "styled-components";
 import { uploadImage } from '../services/api';
@@ -10,11 +10,18 @@ interface Props {
 };
 
 export const ImageDropzone = (props: Props) => {
+    const [showAlert, setShowAlert] = useState<Boolean>(false)
 
     const onDrop = useCallback(async (acceptedFiles: any) => {
         if (acceptedFiles) {
             if (acceptedFiles[0].size > 524288) {
-                return console.log("File too large")
+                return (
+                    console.log("File too large"),
+                    setShowAlert(true),
+                    setTimeout(() => {
+                        setShowAlert(false)
+                    }, 3000)
+                );
             }
             else {
                 console.log('accepted file', acceptedFiles[0].size)
@@ -22,6 +29,7 @@ export const ImageDropzone = (props: Props) => {
                     const formData = new FormData();
                     formData.append("file", acceptedFiles[0]);
                     formData.append("description", "Image description");
+
                     await uploadImage(formData);
                     props.fetchImages();
                 }
@@ -55,6 +63,7 @@ export const ImageDropzone = (props: Props) => {
                 </>
             }
         </DropContainer>
+        {showAlert ? <div><p>File too large</p></div> : <></>}
         </>
     )
 };

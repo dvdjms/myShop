@@ -8,14 +8,11 @@ import { RightClickMenu } from '../components/RightClickMenu';
 
 
 const ImageContainer = () => {
-    const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [imageUrls, setImageUrls] = useState<{id: number; url: string; description: string}[]>([]);
     const [file, setFile] = useState<File | null>(null);
     const [description, setDescription] = useState<string | null>('');
     const {isAuthenticated} = useAuth();
-
-    // useEffect(() => {
-    //     fetchImages();
-    // },[]);
+    
 
     const fetchImages = async () => {
         try {
@@ -53,7 +50,6 @@ const ImageContainer = () => {
         }));
     };
     
-    
     // eslint-disable-next-line
     const handleMenuItemClick = (image_id: number) => {
         setMenuStates(prevState => ({
@@ -61,6 +57,11 @@ const ImageContainer = () => {
             [image_id]: { isVisible: false, position: { x: 0, y: 0 } }
         }))
     };
+
+    const handleDelete = (deletedImageId: number) => {
+        setImageUrls(prevImages => prevImages.filter(image => image.id !== deletedImageId));
+    };
+
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             const clickedElement = event.target as HTMLElement;
@@ -84,12 +85,12 @@ const ImageContainer = () => {
         };
     }, [menuStates]);
 
+
     useEffect(() => {
         fetchImages();
+    },[]);
 
-    },[handleMenuItemClick]);
-
-
+    
     return (
         <>
         {isAuthenticated ? 
@@ -121,6 +122,7 @@ const ImageContainer = () => {
                                 onMenuItemClick={() => handleMenuItemClick(imageUrl.id)}
                                 image_id={imageUrl.id}
                                 imageUrl={imageUrl.url}
+                                deleteImageState={(imageId) => handleDelete(imageId)}
                             />
                         )}
                     </div> 
@@ -129,7 +131,6 @@ const ImageContainer = () => {
         </ImageContainerMain>
         </>
     )
-
 };
 
 

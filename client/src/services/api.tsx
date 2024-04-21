@@ -18,7 +18,7 @@ export const signInUserFetch = async (user_token: string, userUID: string, displ
             }),
         })
         const data = await response.json();
-        console.log(data, "signed in successfully")
+        console.log(data, "signed in successfully");
         return response;
     } catch (error) {
         console.error('Error fetching data', error);
@@ -40,7 +40,7 @@ export const getUserDetails = async (): Promise<string | undefined> => {
             headers: {
                 "Authorization": `Bearer ${token}`
             },
-        })
+        });
         const data = await response.json();
         return data.username;
     } catch (error) {
@@ -63,12 +63,10 @@ export const getImages = async () => {
             url: item.image_url,
             description: item.description,
         }));
-
     } catch (error) {
         console.error('Error fetching data', error);
         throw error;
     };
-
 };
 
 // upload image
@@ -105,7 +103,6 @@ export const deleteImage = async (ImageId: number) => {
         return "not signed in";
     }
     const token = await user.getIdToken();
-
     const url = `http://127.0.0.1:8000/api/images/${ImageId}`;
     try {
         const response = await fetch(url, {

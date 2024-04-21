@@ -1,4 +1,4 @@
-import React, {  } from "react";
+import React from "react";
 import styled from "styled-components";
 import { deleteImage } from '../services/api';
 import { useNavigate } from "react-router-dom";
@@ -9,9 +9,10 @@ interface Props {
     image_id: number;
     imageUrl: string;
     onMenuItemClick: (item: any) => void;
+    deleteImageState: (item: any) => void;
 };
 
-export const RightClickMenu: React.FC<Props> = ({ isVisible, position, image_id, imageUrl, onMenuItemClick }) => {
+export const RightClickMenu: React.FC<Props> = ({ isVisible, position, image_id, imageUrl, onMenuItemClick, deleteImageState }) => {
     
     let navigate = useNavigate();
 
@@ -35,6 +36,7 @@ export const RightClickMenu: React.FC<Props> = ({ isVisible, position, image_id,
             onClick: () => {
                 deleteImage(image_id);
                 onMenuItemClick(image_id);
+                deleteImageState(image_id);
             }
         },
     ];
@@ -49,12 +51,10 @@ export const RightClickMenu: React.FC<Props> = ({ isVisible, position, image_id,
                     <List key={index} onClick={item.onClick} >                        
                         {item.text}
                     </List>
-
                 ))}
             </ul>
         </Rightclick>
     );
-
 };
 
 
