@@ -16,7 +16,6 @@ export const ImageDropzone = (props: Props) => {
         if (acceptedFiles) {
             if (acceptedFiles[0].size > 524288) {
                 return (
-                    console.log("File too large"),
                     setShowAlert(true),
                     setTimeout(() => {
                         setShowAlert(false)
@@ -62,8 +61,9 @@ export const ImageDropzone = (props: Props) => {
                 </DropBoxInactive>
                 </>
             }
+                    {showAlert ? <Alert>File too large!</Alert> : <></>}
         </DropContainer>
-        {showAlert ? <div><p>File too large</p></div> : <></>}
+
         </>
     )
 };
@@ -118,5 +118,18 @@ const Logo = styled.img`
     margin: auto;
 `;
 
-
+const Alert = styled.p`
+    color: red;
+    position: absolute;
+    top: 65px;
+    border: gray solid 2px;
+    border-radius: 5px;
+    background-color: #f3f2f2;
+    height: 60px;
+    width: 180px;
+    text-align: center;
+    font-size: 20px;
+    padding-top: 12px;
+    box-shadow: 3px 3px 3px gray;
+`;
 

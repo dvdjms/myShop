@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from "styled-components";
 import ImageContainer from '../../containers/ImageContainer';
-import { ImageDropzone } from '../../components/ImageDropzone';
+// import { ImageDropzone } from '../../components/ImageDropzone';
 
 const MyProducts = () => {
-
 
 
     return (
@@ -13,12 +12,10 @@ const MyProducts = () => {
             {/* <ImageDropzone fetchImages={fetchImages}/> */}
             <ImageContainer />
         </Section>
+    );
 
 
-    )
-
-
-}
+};
 
 const Section = styled.section`
     padding-top: 70px;
@@ -26,9 +23,7 @@ const Section = styled.section`
     height: fit-content;
     min-height: 110vh;
     position: relative;
-`
-
-
+`;
 
 
 export default MyProducts;

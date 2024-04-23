@@ -12,7 +12,7 @@ const ImageContainer = () => {
     const [file, setFile] = useState<File | null>(null);
     const [description, setDescription] = useState<string | null>('');
     const {isAuthenticated} = useAuth();
-    
+
 
     const fetchImages = async () => {
         try {
@@ -112,7 +112,7 @@ const ImageContainer = () => {
                     <div key={index}>
                         <Image 
                             src={imageUrl.url} 
-                            alt={`image ${imageUrl.description}`} 
+                            alt={imageUrl.description} 
                             onRightClick={(e) => handleRightClick(e, imageUrl.id)}
                         />
                         {menuStates[imageUrl.id]?.isVisible && (

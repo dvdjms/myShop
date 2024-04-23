@@ -85,7 +85,7 @@ export const uploadImage = async (formData: FormData) => {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                 },
-                body: formData,
+                body: formData
             })
             const data = await response.json();
             console.log("Api message", data.message);

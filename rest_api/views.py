@@ -15,6 +15,13 @@ from rest_framework.response import Response
 from .models import Product, CustomUser, Image
 from django.views.generic import DeleteView
 
+class FirebaseAuthenticationMixin:
+    def get_authenticators(self):
+        if self.request.method == 'GET':
+            return []  # No authentication for GET requests
+        else:
+            return [FirebaseAuthentication()]
+        
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -63,12 +70,11 @@ class CurrentUserView(APIView):
 
 class ProductView(generics.ListAPIView):
     serializer_class = ProductSerializer
-
     def get_queryset(self):
         return Product.objects.all().order_by('id')
     
 
-class ImageView(generics.ListCreateAPIView):
+class ImageView(FirebaseAuthenticationMixin, generics.ListCreateAPIView):
     serializer_class = ImageSerializer
     parser_classes = [MultiPartParser, FormParser]
 
@@ -76,34 +82,33 @@ class ImageView(generics.ListCreateAPIView):
         results = Image.objects.select_related('firebase_uid', 'product').all().order_by('id')
         return results
     
-    def post(self, request, *args, **kwargs):
-        image_data = request.data['file']
-        description = request.data['description']
-        product_id = 2
+    def create_image_object(self, image_data, description, product_id, user):
         serializer = ImageSerializer(data = {
             'image_url': image_data,
             'description': description,
             'product_id': product_id,
-            'firebase_uid': request.user.firebase_uid,
+            'firebase_uid': user,
         })
-        if serializer.is_valid():
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+    def post(self, request, *args, **kwargs):
+        image_data = request.data.get('file')
+        description = request.data.get('description')
+        product_id = 2
+        user = request.user
+        try:
+            image_object = self.create_image_object(image_data, description, product_id, user)
             response_data = {
                 'message': 'Posted successfully',
-                'data': serializer.data
+                'data': ImageSerializer(image_object).data
             }
             return Response(response_data, status="201")
-        error_message = str(serializer.errors)
-        return Response({'error': error_message}, status="401")
+        except ValueError as e:
+            return Response({'error': str(e)}, status="401")
         
-    def get_authenticators(self):
-        if self.request.method == 'GET':
-            return []  # No authentication for GET requests
-        else:
-            return [FirebaseAuthentication()] 
-    
 
-class ImageDetailView(generics.RetrieveUpdateDestroyAPIView):
+class ImageDetailView(FirebaseAuthenticationMixin, generics.RetrieveUpdateDestroyAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
 
@@ -115,23 +120,3 @@ class ImageDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response({"message": "Image deleted successfully."}, status=204)
 
                   
-    def get_authenticators(self):
-        if self.request.method == 'GET':
-            return []  # No authentication for GET requests
-        else:
-            return [FirebaseAuthentication()] 
-
-
-# def signUp(request):
-#     return render(request, 'Login.html')
-
-
-# def getUser(request):
-#     products = User.objects.all()
-#     try:
-#         products = Product.objects.all()
-#         response_object = {"data": serialize("json", products)}
-#     except ValueError as e:
-#         return JsonResponse({"data": f"Invalid user token: {str(e)}"})
-#     return JsonResponse(response_object)
-
