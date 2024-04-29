@@ -59,6 +59,7 @@ class CurrentUserView(APIView):
     authentication_classes = [FirebaseAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = CustomUserSerializer
+
     def get(self, request):
         firebaseUID = request.user.firebase_uid
         username = CustomUser.objects.filter(firebase_uid=firebaseUID).values('username').first()
@@ -111,6 +112,9 @@ class ImageView(FirebaseAuthenticationMixin, generics.ListCreateAPIView):
 class ImageDetailView(FirebaseAuthenticationMixin, generics.RetrieveUpdateDestroyAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
