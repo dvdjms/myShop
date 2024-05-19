@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APITestCase, APIClient
-from rest_api.models import Image, CustomUser
-from rest_api.views import ImageView
+from rest_api.models.models import Image, CustomUser
+from rest_api.views.image_views import ImageView
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
@@ -24,7 +24,6 @@ class ImageViewTestCase(TestCase):
         self.assertEqual(saved_image.description, 'mock_description')
         self.assertEqual(saved_image.product_id, 1)
         self.assertEqual(saved_image.firebase_uid.firebase_uid, user.firebase_uid)
-
 
 
     def test_create_image_object_invalid_data(self):

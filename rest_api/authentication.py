@@ -1,6 +1,6 @@
 from rest_framework.authentication import BaseAuthentication
 from django.contrib.auth.models import User
-from . models import CustomUser
+from .models.models import CustomUser
 import firebase_admin
 from firebase_admin import credentials, auth
 from django.conf import settings

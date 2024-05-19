@@ -17,9 +17,9 @@ Including another URLconf
 
 from django.urls import include, path
 from django.contrib import admin
-# from rest_framework import routers
-from rest_api import views
-from rest_api.views import ProductView, CustomUserViewSet, CurrentUserView, ImageView, ImageDetailView
+from rest_api.views.user_views import CustomUserViewSet, CurrentUserView
+from rest_api.views.product_views import ProductView
+from rest_api.views.image_views import ImageView, ImageDetailView
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static

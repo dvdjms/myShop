@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from requests import request
 from rest_framework import serializers
-from .models import Product, CustomUser, Image
+from ..models.models import Product, CustomUser, Image
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

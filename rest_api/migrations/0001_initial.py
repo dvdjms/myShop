@@ -4,7 +4,7 @@ import django.contrib.auth.models
 from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-import rest_api.models
+import rest_api.models.models
 
 
 class Migration(migrations.Migration):
@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
             name='Image',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image_url', models.ImageField(upload_to=rest_api.models.upload_to)),
+                ('image_url', models.ImageField(upload_to=rest_api.models.models.upload_to)),
                 ('description', models.TextField(default='', max_length=255)),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
                 ('firebase_uid', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='rest_api.customuser', to_field='firebase_uid')),

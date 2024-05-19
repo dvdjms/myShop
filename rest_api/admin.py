@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Product, CustomUser, Image
+from .models.models import Product, CustomUser, Image
 
 
 class CustomUserAdmin(admin.ModelAdmin):
