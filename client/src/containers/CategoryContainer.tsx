@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CategoriesContainer = () => {
+const CategoryContainer = () => {
 
     return (
         <Container>
@@ -20,4 +20,4 @@ const Container = styled.section`
 `;
 
 
-export default CategoriesContainer;
+export default CategoryContainer;

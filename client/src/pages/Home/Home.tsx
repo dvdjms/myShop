@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import CategoriesContainer from '../../containers/CategoriesContainer';
-import ProductsContainer from '../../containers/ProductContainer';
+import CategoryContainer from '../../containers/CategoryContainer';
+import ProductContainer from '../../containers/ProductContainer';
 
 
 const Home = () => {
@@ -16,8 +16,8 @@ const Home = () => {
             </Header>
             <HomePage>
                 <ShopContainer>
-                    <CategoriesContainer />
-                    <ProductsContainer />
+                    <CategoryContainer />
+                    <ProductContainer />
                 </ShopContainer>
             </HomePage>
         </>
