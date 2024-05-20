@@ -9,7 +9,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'category', 'price', 'firebase_uid')
+    list_display = ('id', 'name', 'description', 'category', 'price', 'firebase_uid')
     
 
 class ImageAdmin(admin.ModelAdmin):

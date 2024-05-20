@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_api.serializers.serializers import ImageSerializer
+from ..serializers.serializers import ImageSerializer
 from rest_framework.response import Response
 from ..models.models import Image
 from django.views.generic import DeleteView

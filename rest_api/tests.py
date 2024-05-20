@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APITestCase, APIClient
-from rest_api.models.models import Image, CustomUser
-from rest_api.views.image_views import ImageView
+from .models.models import Image, CustomUser
+from .views.image_views import ImageView
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 

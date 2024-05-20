@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_api.serializers.serializers import ProductSerializer
+from ..serializers.serializers import ProductSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models.models import Product

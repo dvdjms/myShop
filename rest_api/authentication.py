@@ -9,7 +9,6 @@ from rest_api import exceptions
 firebase_creds = credentials.Certificate(settings.FIREBASE_CONFIG)
 firebase_app = firebase_admin.initialize_app(firebase_creds)
 
-
 # default_app = firebase_admin.initialize_app(cred)
 """FIREBASE AUTHENTICATION"""
 class FirebaseAuthentication(BaseAuthentication):
@@ -39,7 +38,7 @@ class FirebaseAuthentication(BaseAuthentication):
             except Exception:
                   raise exceptions.FirebaseError()
             
-            # """Get or create the user"""
+            """Get or create the user"""
             # this is redundant. User is added to database via fetch
             # try:
             #       print('firebase provider', decoded_token.get("sign_in_provider"))
@@ -50,9 +49,7 @@ class FirebaseAuthentication(BaseAuthentication):
             # except CustomUser.DoesNotExist:
             #       return None
 
-
             """Retrieve the user without creating it"""
-            
             try:
                   user = CustomUser(username=display_name,email=email,firebase_uid=uid)
             except CustomUser.DoesNotExist:

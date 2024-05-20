@@ -10,8 +10,8 @@ class CustomUser(AbstractUser):
     # Add additional fields as needed
     username = models.CharField(max_length=255) # without this username must be unique and one word
     firebase_uid = models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add = True, null = True)
-    updated_at = models.DateTimeField(auto_now_add = True, null = True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True, null=True)
 
     # Add related_name to avoid clashes with auth.User
     groups = models.ManyToManyField(
@@ -40,21 +40,24 @@ class Product(models.Model):
     description = models.TextField(max_length=1024, blank=False, default="")
     category = models.CharField(max_length=32, blank=False)
     price = models.DecimalField(blank=False, max_digits=6, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add = True, null = True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     firebase_uid = models.ForeignKey(CustomUser, on_delete=models.CASCADE, to_field='firebase_uid', related_name='products')
 
-
+    def __str__(self):
+        return self.name
+    
 def upload_to(instance, filename):
     return f'uploads/{filename}'
-
 
 class Image(models.Model):
     image_url = models.ImageField(upload_to=upload_to)
     description = models.TextField(max_length=255, blank=False, default="")
-    created_at = models.DateTimeField(auto_now_add = True, null = True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     firebase_uid = models.ForeignKey(CustomUser, on_delete=models.CASCADE, to_field='firebase_uid', related_name='images')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE, default=1)
 
+    def __str__(self):
+        return f"Image for {self.product.name} ({self.id})"
 
 @receiver(post_delete, sender=Image)
 def delete_image_file(sender, instance, **kwargs):

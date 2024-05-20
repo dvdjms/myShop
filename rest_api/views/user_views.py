@@ -3,13 +3,13 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
-from rest_api.serializers.serializers import UserSerializer, GroupSerializer, ProductSerializer, CustomUserSerializer, ImageSerializer
-from rest_api.authentication import FirebaseAuthentication
+from ..serializers.serializers import UserSerializer, GroupSerializer, CustomUserSerializer
+from ..authentication import FirebaseAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models.models import CustomUser
 
-        
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -32,7 +32,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     authentication_classes = [FirebaseAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = CustomUserSerializer
-    queryset = CustomUser.objects.all().order_by('id')  # Order by some field like 'id'
+    queryset = CustomUser.objects.all().order_by('id')
 
     def post(self, request):
         serializer = CustomUserSerializer(data=request.data)

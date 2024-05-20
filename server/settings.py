@@ -36,13 +36,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
-
-
-
 INSTALLED_APPS = [
     'corsheaders', # Added by me
     'rest_framework', # Added by me
-    'main.apps.MainConfig', # Added by me
     'rest_api.apps.RestApiConfig', # Added by me
     'django.contrib.admin',
     'django.contrib.auth',
